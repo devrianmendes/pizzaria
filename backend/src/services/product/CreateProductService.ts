@@ -5,7 +5,7 @@ type ProductRequest = {
   price: string;
   description: string;
   banner: string;
-  category_id: string;
+  categoryId: string;
 };
 
 class CreateProductService {
@@ -14,9 +14,19 @@ class CreateProductService {
     price,
     description,
     banner,
-    category_id,
+    categoryId,
   }: ProductRequest) {
-    return{ok: true}
+    console.log(name, price, description, banner, categoryId)
+    const product = await prismaClient.product.create({
+      data: {
+        name: name,
+        price: price,
+        description: description,
+        banner: banner,
+        categoryId: categoryId,
+      },
+    });
+    return product;
   }
 }
 
