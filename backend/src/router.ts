@@ -12,6 +12,8 @@ import { isAuthenticated } from './middlewares/isAuthenticated';
 import { ListCategoryController } from './controllers/category/ListCategoryController';
 import { CreateProductController } from './controllers/product/CreateProductController';
 import { ListProductByCategoryController } from './controllers/product/ListProductByCategoryController';
+import { CreateOrderController } from './controllers/order/CreateOrderController';
+import { DeleteOrderController } from './controllers/order/DeleteOrderController';
 
 
 const router = Router();
@@ -26,11 +28,14 @@ router.get('/detailUser', isAuthenticated, new DetailUserController().handle);
 //Category routes
 router.post('/createCategory', isAuthenticated, new CreateCategoryController().handle);
 router.get('/listCategory', isAuthenticated, new ListCategoryController().handle);
-router.get('/listProductByCategory', isAuthenticated, new ListProductByCategoryController().handle);
 
 //Product routes
 router.post('/createProduct', isAuthenticated, upload.single('file'), new CreateProductController().handle);
+router.get('/listProductByCategory', isAuthenticated, new ListProductByCategoryController().handle);
 
+//Order routes
+router.post('/createOrder', isAuthenticated, new CreateOrderController().handle);
+router.delete('/deleteOrder', isAuthenticated, new DeleteOrderController().handle);
 
 //Item routes
 
