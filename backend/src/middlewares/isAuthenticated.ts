@@ -23,7 +23,8 @@ export function isAuthenticated(
   }
   try {
     const { sub } = verify(token, process.env.SECRET) as PayLoad;
-    console.log(sub)
+  
+    req.user_id = sub;
 } catch (error) {
     return res.status(401).end();
   }
