@@ -14,6 +14,12 @@ import { CreateProductController } from './controllers/product/CreateProductCont
 import { ListProductByCategoryController } from './controllers/product/ListProductByCategoryController';
 import { CreateOrderController } from './controllers/order/CreateOrderController';
 import { DeleteOrderController } from './controllers/order/DeleteOrderController';
+import { CreateItemController } from './controllers/item/CreateItemController';
+import { DeleteItemController } from './controllers/item/DeleteItemController';
+import { SendOrderController } from './controllers/order/SendOrderController';
+import { ListOrderController } from './controllers/order/ListOrderController';
+import { DetailOrderController } from './controllers/order/DetailOrderController';
+import { FinishOrderController } from './controllers/order/FinishOrderController';
 
 
 const router = Router();
@@ -35,9 +41,15 @@ router.get('/listProductByCategory', isAuthenticated, new ListProductByCategoryC
 
 //Order routes
 router.post('/createOrder', isAuthenticated, new CreateOrderController().handle);
+router.put('/createOrder/send', isAuthenticated, new SendOrderController().handle);
 router.delete('/deleteOrder', isAuthenticated, new DeleteOrderController().handle);
+router.get('/listOrder', isAuthenticated, new ListOrderController().handle);
+router.get('/detailOrder', isAuthenticated, new DetailOrderController().handle);
+router.put('/finishOrder', isAuthenticated, new FinishOrderController().handle);
 
 //Item routes
+router.post('/createOrder/addItem', isAuthenticated, new CreateItemController().handle);
+router.delete('/createOrder/deleteItem', isAuthenticated, new DeleteItemController().handle);
 
 
 
