@@ -8,3 +8,5 @@ Adicionar uma coluna no produts dizendo se está fora do estoque. (Avançado: cr
 Colocar trycatch em tudo
 verificações em tudo
 
+remover categoria
+
