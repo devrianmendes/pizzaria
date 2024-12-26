@@ -1,7 +1,9 @@
+import {Form} from './components/form';
+
 export default function Product() {
     return (
         <main>
-            <h1>paginde novo produit</h1>
+            <Form />
         </main>
     )
 }
