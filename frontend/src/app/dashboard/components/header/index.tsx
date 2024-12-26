@@ -8,10 +8,12 @@ import { LogOutIcon } from "lucide-react";
 import logoImg from "@/../public/logo.svg";
 import { deleteCookie } from "cookies-next";
 import { redirect } from "next/navigation";
+import { toast } from "sonner";
 
 export function Header() {
   const handleLogout = async () => {
     deleteCookie("AuthLogin", { path: "/" });
+    toast.success("Logout efetuado.")
 
     redirect("/");
   };

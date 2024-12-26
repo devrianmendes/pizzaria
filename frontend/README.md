@@ -1,3 +1,3 @@
-colocar avisos (esqueci o noem da notificação);
-
-fazer verificações e tratar possiveis erros
+    -fazer verificações e tratar possiveis erros
+    -não da pra colocar o toast em todos os momentos necessários pq só da pra colocar em client components
+    - Criar uma pagina para registrar pedido

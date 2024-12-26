@@ -5,6 +5,7 @@ import Link from "next/link";
 import { api } from "@/services/app";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
+import { toast } from "sonner";
 
 export default function Home() {
   const handleLogin = async (formData: FormData) => {
@@ -21,12 +22,12 @@ export default function Home() {
         email,
         password,
       });
-      
-      if(!response.data.token) {
+
+      if (!response.data.token) {
         return;
       }
 
-      const expressTime = 60*60*24*30*1000;
+      const expressTime = 60 * 60 * 24 * 30 * 1000;
 
       const cookieStore = await cookies();
 
@@ -36,7 +37,6 @@ export default function Home() {
         httpOnly: false,
         secure: process.env.NODE_ENV === "production",
       });
-
     } catch (err) {
       console.log(err);
       return;
