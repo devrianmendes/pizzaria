@@ -5,3 +5,8 @@
     -NA HORA DE ABRIR A MESA, COLOCAR O NOME DO CLIENTE
 
     - atualizar a lista de pedidos automaticamente assim que o pedido é feito
+
+    - calcular o valor total pra exibir pro garçom na hroa de cobrar
+
+    -definir um tamanho para a imagem enviada
+    
