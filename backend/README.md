@@ -10,3 +10,5 @@ verificações em tudo
 
 remover categoria
 
+alterar o nome das rotas: rota/função
+
