@@ -1,27 +1,45 @@
+"use client";
+
 import { X } from "lucide-react";
 import styles from "./styles.module.scss";
+import { useContext } from "react";
+import { OrderContext } from "../../../../../providers/order";
 
 export function ModalOrder() {
+  const { onRequestClose, order, finishOrder } = useContext(OrderContext);
+
+
+  const handleFinishOrder = async () => {
+    await finishOrder(order[0].order.id);
+  };
+
+
   return (
     <dialog className={styles.dialogContainer}>
       <section className={styles.dialogContent}>
-        <button className={styles.dialogBack}>
+        <button className={styles.dialogBack} onClick={onRequestClose}>
           <X size={40} color="#ff3f4b" />
         </button>
 
         <article className={styles.container}>
           <h2>Detalhes do pedido</h2>
           <span className={styles.table}>
-            Mesa <b>36</b>
+            Mesa <b>{order[0].order.table}</b>
           </span>
-          <section className={styles.item}>
-            <span>
-              1 - <b>Coca-cola lata</b>
-            </span>
-            <span className={styles.description}>1 - Lata 350ml</span>
-          </section>
+          {order.map((eachOrder) => (
+            <section className={styles.item} key={eachOrder.id}>
+              <span>
+                {eachOrder.amount} - <b>{eachOrder.product.name}</b>
+              </span>
+              <span className={styles.description}>
+                {eachOrder.product.description}
+              </span>
+            </section>
+          ))}
 
-          <button className={styles.buttonOrder}>Concluir pedido</button>
+          <button className={styles.buttonOrder} onClick={handleFinishOrder}>
+            Concluir pedido
+          </button>
         </article>
       </section>
     </dialog>

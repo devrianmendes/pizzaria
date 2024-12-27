@@ -20,8 +20,10 @@ type DataProps = {
 export function Form({ categories }: DataProps) {
   const [image, setImage] = useState<File>();
   const [previewImage, setPreviewImage] = useState("");
+  const router = useRouter();
 
   const handleRegisterProduct = async (formData: FormData) => {
+
     const category = formData.get("category");
     const name = formData.get("name");
     const price = formData.get("price");
@@ -55,7 +57,7 @@ export function Form({ categories }: DataProps) {
       });
 
     toast.success("Produto registrado.");
-    useRouter().push("/dashboard");
+    router.push("/dashboard");
   };
 
   const handleFile = async (e: ChangeEvent<HTMLInputElement>) => {
