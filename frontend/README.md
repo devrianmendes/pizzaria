@@ -10,3 +10,4 @@
 
     -definir um tamanho para a imagem enviada
     
+    - não é necessário abrir apenas uma order por mesa pois o usuário pode querer mais de uma comandda na mesa
