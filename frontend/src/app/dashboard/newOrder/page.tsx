@@ -21,6 +21,18 @@ const page = () => {
       table: +tableNumber,
     };
 
+    const getCategoryList = await api
+      .get("/listCategory", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .catch((err) => {
+        console.log(err);
+        return;
+      });
+
+    console.log(getCategoryList);
     const response = await api
       .post("/createOrder", data, {
         headers: {
@@ -32,8 +44,7 @@ const page = () => {
         return;
       });
 
-      console.log(response, "response")
-    redirect("/dashboard/newOrder/details");
+    redirect(`/dashboard/newOrder/${tableNumber}/details`);
   };
 
   return (
