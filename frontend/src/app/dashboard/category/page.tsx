@@ -6,21 +6,24 @@ import { redirect } from "next/navigation";
 
 export default function Category() {
   const handleRegisterCategory = async (formData: FormData) => {
-    "use server"
+    "use server";
     const name = formData.get("name");
     if (!name) return;
 
-    const data = {name};
+    const data = { name };
 
     const token = await getCookieServer();
 
-    await api.post("/createCategory", data, {headers: {
-        Authorization: `Bearer ${token}`
-
-    }}).catch((err) => {
+    await api
+      .post("/createCategory", data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .catch((err) => {
         console.log(err);
         return;
-    });
+      });
 
     redirect("/dashboard");
   };

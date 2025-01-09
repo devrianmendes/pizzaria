@@ -10,6 +10,8 @@ const page = () => {
     const clientName = formData.get("clientName");
     const tableNumber = formData.get("tableNumber");
 
+    let orderId = "";
+
     if (!clientName || !tableNumber) {
       return;
     }
@@ -21,18 +23,6 @@ const page = () => {
       table: +tableNumber,
     };
 
-    const getCategoryList = await api
-      .get("/listCategory", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .catch((err) => {
-        console.log(err);
-        return;
-      });
-
-    console.log(getCategoryList);
     const response = await api
       .post("/createOrder", data, {
         headers: {
@@ -44,7 +34,14 @@ const page = () => {
         return;
       });
 
-    redirect(`/dashboard/newOrder/${tableNumber}/details`);
+    if (!response) return;
+
+    orderId = response.data.id;
+
+    // redirect(`/dashboard/newOrder/${tableNumber}/details`);
+    redirect(
+      `/dashboard/newOrder/${tableNumber}/details?orderId=${orderId}`
+    );
   };
 
   return (
