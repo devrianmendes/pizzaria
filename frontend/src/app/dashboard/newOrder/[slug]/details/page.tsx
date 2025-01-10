@@ -4,6 +4,7 @@ import { getCookieClient } from "@/lib/cookieClient";
 import { api } from "@/services/app";
 import { TrashIcon } from "lucide-react";
 import { use, useEffect, useState } from "react";
+import { toast } from "sonner";
 
 type CategoryType = {
   id: string;
@@ -18,53 +19,83 @@ type ParamsType = {
   }>;
 };
 
+type DetailOrder = {
+  amount: number;
+  id: string;
+  order: {
+    id: string;
+    name: string;
+    table: number;
+  };
+  product: {
+    description: string;
+    id: string;
+    name: string;
+    price: string;
+  };
+};
+
 const page = ({ params, searchParams }: ParamsType) => {
-  // const page = ({params, searchParams}: ParamsType) => {
   const resolvedParams = use(params);
   const resolvedSearchParams = use(searchParams);
 
-  // console.log(resolvedParams, resolvedSearchParams)
-  // return <p>a</p>
   const [categoryList, setCategoryList] = useState<CategoryType>([]);
   const [productList, setProductList] = useState<CategoryType>([]);
-  let order = {};
-  // console.log(searchParams, "params");
 
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedProduct, setSelectedProduct] = useState("");
+  const [orderDetails, setOrderDetails] = useState<DetailOrder[]>([]);
   const [quantity, setQuantity] = useState("");
 
-  // const resolvedParams = use(params);
   const table = resolvedParams.slug;
   const orderId = resolvedSearchParams.orderId;
 
   const token = getCookieClient();
 
   const handleAddItem = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault()
+    e.preventDefault();
     const data = {
       orderId: orderId,
       productId: selectedProduct,
-      amout: quantity,
+      amount: quantity,
     };
-    console.log(data)
-    // const response = await api
-    //   .put("/createOrder/send", data, {
-    //     headers: {
-    //       Authorization: `Bearer ${token}`,
-    //     },
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //     return;
-    //   });
 
-    //   console.log(response, 'retorno de adicionar item a order')
+    const response = await api
+      .post("/createOrder/addItem", data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error("Erro ao adicionar o item.");
+        return;
+      });
+
+    if (response) {
+      toast.success("Item adicionado.");
+    }
+
+    const orderDetails = await api
+      .get("/detailOrder", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          orderId: orderId,
+        },
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error("Erro ao atualizar pedido.");
+        return;
+      });
+
+    orderDetails && setOrderDetails(orderDetails.data);
+    console.log(orderDetails, "order atualizado");
   };
 
-  const handleSendOrder = async () => {
-   
-  };
+  const handleSendOrder = async () => {};
 
   useEffect(() => {
     const getCategoryList = async () => {
@@ -102,6 +133,7 @@ const page = ({ params, searchParams }: ParamsType) => {
         });
 
       if (!response) return;
+
       setProductList(response.data);
     };
     getProductList();
@@ -116,10 +148,11 @@ const page = ({ params, searchParams }: ParamsType) => {
 
         <div>
           <select
-            name="categoryRoll"
-            id=""
             onChange={(e) => setSelectedCategory(e.target.value)}
+            // defaultValue={"Categorias..."}
+            value={"default"}
           >
+            <option value="default">Categorias...</option>
             {categoryList.map((eachCategory) => (
               <option value={eachCategory.id} key={eachCategory.id}>
                 {eachCategory.name}
@@ -130,11 +163,12 @@ const page = ({ params, searchParams }: ParamsType) => {
         </div>
         <div>
           <select
-            name="categoryRoll"
-            id=""
             onChange={(e) => setSelectedProduct(e.target.value)}
+            // defaultValue={"Produtos"}
+            value={"default"}
           >
-            {productList.map((eachProduct) => (
+            <option value={"default"}>Produtos...</option>
+            {productList.map((eachProduct, i) => (
               <option value={eachProduct.id} key={eachProduct.id}>
                 {eachProduct.name}
               </option>
@@ -157,7 +191,15 @@ const page = ({ params, searchParams }: ParamsType) => {
           <Button name="Avançar" />
         </div>
       </form>
-      <ul></ul>
+      <div>
+        <ul>
+          {orderDetails.map((eachItem, i) => (
+            <li key={i}>
+              {eachItem.amount} {eachItem.product.name}
+            </li>
+          ))}
+        </ul>
+      </div>
     </section>
   );
 };
