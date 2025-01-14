@@ -7,7 +7,11 @@ class CreateItemController {
 
     const createItemService = new CreateItemService();
 
-    const item = await createItemService.execute({ orderId, productId, amount });
+    const item = await createItemService.execute({
+      orderId,
+      productId,
+      amount,
+    });
 
     return res.json(item);
   }

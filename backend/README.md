@@ -12,3 +12,7 @@ remover categoria
 
 alterar o nome das rotas: rota/função
 
+renomear rotas
+
+alterar o nome da tabela status para finished?
+

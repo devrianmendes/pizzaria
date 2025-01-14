@@ -11,7 +11,7 @@ class ListOrderService {
         createdAt: "desc",
       },
     });
-    return listOrder;
+    return listOrder.reverse();
   }
 }
 

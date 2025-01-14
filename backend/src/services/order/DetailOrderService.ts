@@ -10,9 +10,25 @@ class DetailOrderService {
       where: {
         orderId: orderId,
       },
-      include: {
-        product: true,
-        order: true,
+      select: {
+        id: true,
+        amount: true,
+        // Aqui, você pode incluir o produto e o pedido, como estava comentado:
+        product: {
+          select: {
+            id: true,
+            name: true,
+            description: true,
+            price: true,
+          },
+        },
+        order: {
+          select: {
+            id: true,
+            name: true,
+            table: true,
+          },
+        },
       },
     });
 
