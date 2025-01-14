@@ -3,8 +3,9 @@ import { Button } from "@/app/dashboard/components/button";
 import { getCookieClient } from "@/lib/cookieClient";
 import { api } from "@/services/app";
 import { TrashIcon } from "lucide-react";
-import { use, useEffect, useState } from "react";
+import { use, useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
+import { OrderContext } from "../../../../../../providers/order";
 
 type CategoryType = {
   id: string;
@@ -46,6 +47,8 @@ const page = ({ params, searchParams }: ParamsType) => {
   const [selectedProduct, setSelectedProduct] = useState("");
   const [orderDetails, setOrderDetails] = useState<DetailOrder[]>([]);
   const [quantity, setQuantity] = useState("");
+
+  const { sendOrder } = useContext(OrderContext);
 
   const table = resolvedParams.slug;
   const orderId = resolvedSearchParams.orderId;
@@ -92,10 +95,12 @@ const page = ({ params, searchParams }: ParamsType) => {
       });
 
     orderDetails && setOrderDetails(orderDetails.data);
-    console.log(orderDetails, "order atualizado");
   };
 
-  const handleSendOrder = async () => {};
+  const handleSendOrder = async (e: React.FormEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    sendOrder(orderId);
+  };
 
   useEffect(() => {
     const getCategoryList = async () => {
@@ -188,7 +193,9 @@ const page = ({ params, searchParams }: ParamsType) => {
         </div>
         <div>
           <button onClick={handleAddItem}>+</button>
-          <Button name="Avançar" />
+          <div onClick={(e) => handleSendOrder(e)}>
+            <Button name="Finalizar pedido" />
+          </div>
         </div>
       </form>
       <div>

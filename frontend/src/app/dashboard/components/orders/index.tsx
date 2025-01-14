@@ -19,7 +19,6 @@ export function Orders({ orders }: { orders: OrderProps[] | [] }) {
   };
 
   const handleDetailOrder = async (id: string) => {
-    console.log(id)
     await onRequestOpen(id);
   };
 

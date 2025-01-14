@@ -12,6 +12,7 @@ type OrderContextData = {
   onRequestClose: () => void;
   order: OrderItemProps[];
   finishOrder: (orderId: string) => Promise<void>;
+  sendOrder: (orderId: string) => Promise<void>;
 };
 
 type OrderProviderProps = {
@@ -49,7 +50,6 @@ export function OrderProvider({ children }: OrderProviderProps) {
   const router = useRouter();
 
   const onRequestOpen = async (orderId: string) => {
-
     const token = getCookieClient();
 
     const response = await api.get("/detailOrder", {
@@ -92,9 +92,41 @@ export function OrderProvider({ children }: OrderProviderProps) {
     router.refresh();
   };
 
+  const sendOrder = async (orderId: string) => {
+    const token = getCookieClient();
+
+    const data = { orderId };
+
+    try {
+      const response = await api.put("/createOrder/send", data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log(response, "resposta do response enviado a order pra coziha");
+
+      toast.success("Pedido enviado.");
+
+      router.push("/dashboard");
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error);
+        toast.error("Erro ao enviar o pedido.");
+      }
+    }
+  };
+
   return (
     <OrderContext.Provider
-      value={{ isOpen, order, onRequestOpen, onRequestClose, finishOrder }}
+      value={{
+        isOpen,
+        order,
+        onRequestOpen,
+        onRequestClose,
+        finishOrder,
+        sendOrder,
+      }}
     >
       {children}
     </OrderContext.Provider>
