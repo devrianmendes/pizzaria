@@ -8,10 +8,10 @@ class ListOrderService {
         status: false,
       },
       orderBy: {
-        createdAt: "desc",
+        createdAt: 'asc'
       },
     });
-    return listOrder.reverse();
+    return listOrder;
   }
 }
 
