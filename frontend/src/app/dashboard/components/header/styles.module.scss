@@ -5,7 +5,7 @@
 .headerContent {
   max-width: 1280px;
   height: 5rem;
-  margin: 0 auto;
+  margin: 10 auto;
   padding: 0px 16px;
   display: flex;
   flex-direction: column;
@@ -21,7 +21,7 @@
   a{
     color: var(--white);
     text-decoration: none;
-    transition: color .9s;
+    transition: color .3s;
 
     &:hover {
         color: var(--red-900);
@@ -40,7 +40,16 @@
   }
 }
 
-@media (min-width: 540px) {
+.logoWrapper {
+  max-width: 300px;
+}
+
+.logo{
+  width: 100%;
+  height: auto;
+}
+
+@media (min-width: 630px) {
   .headerContent {
     flex-direction: row;
   }

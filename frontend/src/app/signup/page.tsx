@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import styles from "../page.module.scss";
-import logoImg from "@/../public/logo.svg";
+import logoImg from "@/../public/logoSignin.svg";
 import { api } from "@/services/app";
 import { redirect } from "next/navigation";
 
@@ -31,8 +31,10 @@ export default function Signup() {
   return (
     <main>
       <div className={styles.containerCenter}>
-        <Image src={logoImg} alt="Logo da pizzaria" />
-
+      <picture className={styles.logoWrapper}>
+        <source srcSet="logoMobile.png" media="(max-width: 720px)" />
+        <Image src={logoImg} alt="" className={styles.logo}/>
+      </picture>
         <section className={styles.login}>
           <h1>Criando sua conta</h1>
           <form action={handleRegister}>

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import Link from "next/link";
 import styles from "./styles.module.scss";
@@ -13,7 +13,7 @@ import { toast } from "sonner";
 export function Header() {
   const handleLogout = async () => {
     deleteCookie("AuthLogin", { path: "/" });
-    toast.success("Logout efetuado.")
+    toast.success("Logout efetuado.");
 
     redirect("/");
   };
@@ -21,14 +21,13 @@ export function Header() {
   return (
     <header className={styles.headerContainer}>
       <div className={styles.headerContent}>
-        <Link href="/dashboard">
+        <Link href="/dashboard" className={styles.logoWrapper}>
           <Image
             src={logoImg}
-            width={190}
-            height={60}
             priority={true}
             quality={100}
             alt="Logo pizzaria"
+            className={styles.logo}
           />
         </Link>
         <nav>

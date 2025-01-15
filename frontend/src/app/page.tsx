@@ -1,11 +1,11 @@
-import logoImg from "@/../public/logo.svg";
+import logoImg from "@/../public/logoSignin.svg";
+import logoMobile from "@/../public/logoMobile.png";
 import styles from "./page.module.scss";
 import Image from "next/image";
 import Link from "next/link";
 import { api } from "@/services/app";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import { toast } from "sonner";
 
 export default function Home() {
   const handleLogin = async (formData: FormData) => {
@@ -47,7 +47,13 @@ export default function Home() {
 
   return (
     <div className={styles.containerCenter}>
-      <Image src={logoImg} alt="Logo da pizzaria" />
+      {/* <div className={styles.logoWrapper}>
+        <Image src={logoImg} alt="Logo da pizzaria" className={styles.logo} />
+      </div> */}
+      <picture className={styles.logoWrapper}>
+        <source srcSet="logoMobile.png" media="(max-width: 720px)" />
+        <Image src={logoImg} alt="" className={styles.logo}/>
+      </picture>
 
       <section className={styles.login}>
         <form action={handleLogin}>
