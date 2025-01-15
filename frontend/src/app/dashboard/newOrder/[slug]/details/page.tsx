@@ -1,11 +1,13 @@
 "use client";
-import { Button } from "@/app/dashboard/components/button";
+
 import { getCookieClient } from "@/lib/cookieClient";
 import { api } from "@/services/app";
-import { TrashIcon } from "lucide-react";
+import { TrashIcon, X } from "lucide-react";
 import { use, useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { OrderContext } from "../../../../../../providers/order";
+import styles from "./styles.module.scss";
+import { useRouter } from "next/navigation";
 
 type CategoryType = {
   id: string;
@@ -42,11 +44,12 @@ const page = ({ params, searchParams }: ParamsType) => {
 
   const [categoryList, setCategoryList] = useState<CategoryType>([]);
   const [productList, setProductList] = useState<CategoryType>([]);
-
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedProduct, setSelectedProduct] = useState("");
   const [orderDetails, setOrderDetails] = useState<DetailOrder[]>([]);
   const [quantity, setQuantity] = useState("");
+
+  const router = useRouter();
 
   const { sendOrder } = useContext(OrderContext);
 
@@ -55,6 +58,25 @@ const page = ({ params, searchParams }: ParamsType) => {
 
   const token = getCookieClient();
 
+  const loadOrderList = async () => {
+    const response = await api
+      .get("/detailOrder", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          orderId: orderId,
+        },
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error("Erro ao atualizar pedido.");
+        return;
+      });
+
+    response && setOrderDetails(response.data);
+  };
+
   const handleAddItem = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const data = {
@@ -62,6 +84,11 @@ const page = ({ params, searchParams }: ParamsType) => {
       productId: selectedProduct,
       amount: quantity,
     };
+
+    if (!selectedProduct || !quantity) {
+      toast.error("Preencha os campos.");
+      return;
+    }
 
     const response = await api
       .post("/createOrder/addItem", data, {
@@ -78,9 +105,37 @@ const page = ({ params, searchParams }: ParamsType) => {
     if (response) {
       toast.success("Item adicionado.");
     }
+    loadOrderList();
+  };
 
-    const orderDetails = await api
-      .get("/detailOrder", {
+  const handleDelItem = async (id: string) => {
+    try {
+      const response = await api.delete("/createOrder/deleteItem", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          itemId: id,
+        },
+      });
+      loadOrderList();
+      toast.success("Item deletado.");
+    } catch (err) {
+      if (err instanceof Error) {
+        console.log(err);
+        toast.error("Erro ao deletar item.");
+      }
+    }
+  };
+
+  const handleSendOrder = async (e: React.FormEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    sendOrder(orderId);
+  };
+
+  const handleDelOrder = async () => {
+    const response = await api
+      .delete("/deleteOrder", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -90,16 +145,9 @@ const page = ({ params, searchParams }: ParamsType) => {
       })
       .catch((err) => {
         console.log(err);
-        toast.error("Erro ao atualizar pedido.");
         return;
       });
-
-    orderDetails && setOrderDetails(orderDetails.data);
-  };
-
-  const handleSendOrder = async (e: React.FormEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    sendOrder(orderId);
+      router.push("/dashboard");
   };
 
   useEffect(() => {
@@ -145,69 +193,87 @@ const page = ({ params, searchParams }: ParamsType) => {
   }, [selectedCategory]);
 
   return (
-    <section>
-      <form>
-        <p>
-          Mesa <span>{table}</span>
-        </p>
+    <main className={styles.container}>
+      <section className={styles.detailsContent}>
+        <form>
+          <header className={styles.formHeader}>
+            <h3>
+              Mesa <span>{table}</span>
+            </h3>
+            <TrashIcon className={styles.trash} color="#ff3f4b" onClick={handleDelOrder} />
+          </header>
 
-        <div>
-          <select
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            // defaultValue={"Categorias..."}
-            value={"default"}
-          >
-            <option value="default">Categorias...</option>
-            {categoryList.map((eachCategory) => (
-              <option value={eachCategory.id} key={eachCategory.id}>
-                {eachCategory.name}
-              </option>
-            ))}
-          </select>
-          <TrashIcon />
-        </div>
-        <div>
-          <select
-            onChange={(e) => setSelectedProduct(e.target.value)}
-            // defaultValue={"Produtos"}
-            value={"default"}
-          >
-            <option value={"default"}>Produtos...</option>
-            {productList.map((eachProduct, i) => (
-              <option value={eachProduct.id} key={eachProduct.id}>
-                {eachProduct.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <p>Quantidade: </p>
-          <input
-            type="number"
-            name="quantity"
-            value={quantity}
-            onChange={(e) => {
-              setQuantity(e.target.value);
-            }}
-          />
-        </div>
-        <div>
-          <button onClick={handleAddItem}>+</button>
-          <div onClick={(e) => handleSendOrder(e)}>
-            <Button name="Finalizar pedido" />
+          <div>
+            <select
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              value={selectedCategory}
+            >
+              <option value="default">Categorias...</option>
+              {categoryList.map((eachCategory) => (
+                <option value={eachCategory.id} key={eachCategory.id}>
+                  {eachCategory.name}
+                </option>
+              ))}
+            </select>
           </div>
+          <div>
+            <select
+              onChange={(e) => setSelectedProduct(e.target.value)}
+              value={selectedProduct}
+            >
+              <option value={"default"}>Produtos...</option>
+              {productList.map((eachProduct, i) => (
+                <option value={eachProduct.id} key={eachProduct.id}>
+                  {eachProduct.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className={styles.quantity}>
+            <p>Quantidade: </p>
+            <input
+              type="number"
+              name="quantity"
+              value={quantity}
+              onChange={(e) => {
+                setQuantity(e.target.value);
+              }}
+            />
+          </div>
+          <div className={styles.buttons}>
+            <button onClick={handleAddItem} className={styles.addItem}>
+              +
+            </button>
+
+            <button
+              onClick={(e) => handleSendOrder(e)}
+              className={styles.sendOrder}
+              disabled={orderDetails.length < 1 && true}
+              style={{
+                opacity: orderDetails.length < 1 ? 0.5 : 1,
+                cursor: orderDetails.length < 1 ? "not-allowed" : "pointer",
+              }}
+            >
+              Enviar pedido
+            </button>
+          </div>
+        </form>
+        <div className={styles.productList}>
+          <ul>
+            {orderDetails.map((eachItem) => (
+              <li key={eachItem.id}>
+                {eachItem.amount} {eachItem.product.name}
+                <X
+                  size={30}
+                  color="#ff3f4b"
+                  onClick={() => handleDelItem(eachItem.id)}
+                />
+              </li>
+            ))}
+          </ul>
         </div>
-      </form>
-      <div>
-        <ul>
-          {orderDetails.map((eachItem, i) => (
-            <li key={i}>
-              {eachItem.amount} {eachItem.product.name}
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
+      </section>
+    </main>
   );
 };
 

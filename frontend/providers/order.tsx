@@ -61,6 +61,12 @@ export function OrderProvider({ children }: OrderProviderProps) {
       },
     });
 
+    if(response.data.length < 1) {
+      
+    }
+
+    console.log(response)
+
     setOrder(response.data);
     setIsOpen(true);
   };
@@ -103,8 +109,6 @@ export function OrderProvider({ children }: OrderProviderProps) {
           Authorization: `Bearer ${token}`,
         },
       });
-
-      console.log(response, "resposta do response enviado a order pra coziha");
 
       toast.success("Pedido enviado.");
 

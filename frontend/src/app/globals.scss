@@ -33,6 +33,9 @@ body {
 body, input, textarea, select, button{
   font: 400 1rem sans-serif;
 }
+h1 {
+  font-size: 2rem;
+}
 
 @media (max-width: 720px) {
   html {

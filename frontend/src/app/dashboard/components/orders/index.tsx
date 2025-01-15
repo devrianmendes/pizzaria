@@ -45,7 +45,9 @@ export function Orders({ orders }: { orders: OrderProps[] | [] }) {
               key={eachOrder.id}
             >
               <div className={styles.tag}></div>
-              <span>{eachOrder.table}</span>
+              <span>
+                Mesa {eachOrder.table} - Cliente {eachOrder.name}
+              </span>
             </button>
           ))}
         </section>

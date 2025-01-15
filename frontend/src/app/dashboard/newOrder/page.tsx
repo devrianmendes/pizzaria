@@ -38,7 +38,6 @@ const page = () => {
 
     orderId = response.data.id;
 
-    // redirect(`/dashboard/newOrder/${tableNumber}/details`);
     redirect(
       `/dashboard/newOrder/${tableNumber}/details?orderId=${orderId}`
     );
@@ -46,19 +45,21 @@ const page = () => {
 
   return (
     <section className={styles.container}>
-      <h2>Novo pedido</h2>
       <form action={handleOpenOrder} className={styles.form}>
+      <h1>Novo pedido</h1>
         <input
           type="text"
           placeholder="Nome do cliente"
           className={styles.input}
           name="clientName"
+          required
         />
         <input
           type="number"
           placeholder="Número da mesa"
           className={styles.input}
           name="tableNumber"
+          required
         />
 
         <Button name="Novo pedido" />
