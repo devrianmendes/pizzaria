@@ -1,27 +1,31 @@
-import prismaClient from "../../prisma";
+import prismaClient from '../../prisma';
 
 type CategoryRequest = {
-  name: string;
+    name: string;
 };
 
 class CreateCategoryService {
-  async execute({ name }: CategoryRequest) {
-    if (name === "") {
-      throw new Error("Nome inválido.");
+    async execute({ name }: CategoryRequest) {
+        if (name === '') {
+            throw new Error('Nome inválido.');
+        }
+        try {
+            const category = await prismaClient.category.create({
+                data: {
+                    name: name,
+                },
+                select: {
+                    id: true,
+                    name: true,
+                },
+            });
+            return category;
+        } catch (err) {
+            if (err instanceof Error) {
+                return err.message;
+            }
+        }
     }
-
-    const category = await prismaClient.category.create({
-      data: {
-        name: name,
-      },
-      select: {
-        id: true,
-        name: true,
-      },
-    });
-
-    return category;
-  }
 }
 
 export { CreateCategoryService };

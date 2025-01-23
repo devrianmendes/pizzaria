@@ -1,18 +1,28 @@
-import prismaClient from "../../prisma";
+import prismaClient from '../../prisma';
 
 type OrderRequest = {
-  orderId: string;
+    orderId: string;
 };
 class DeleteOrderService {
-  async execute({ orderId }: OrderRequest) {
-    const order = await prismaClient.order.delete({
-      where: {
-        id: orderId,
-      },
-    });
+    async execute({ orderId }: OrderRequest) {
+        if (!orderId) {
+            return Error('Erro ao excluir pedido. Id faltante.');
+        }
 
-    return order;
-  }
+        try {
+            const order = await prismaClient.order.delete({
+                where: {
+                    id: orderId,
+                },
+            });
+
+            return order;
+        } catch (err) {
+            if (err instanceof Error) {
+                return err.message;
+            }
+        }
+    }
 }
 
 export { DeleteOrderService };

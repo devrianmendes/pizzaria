@@ -52,6 +52,30 @@ router.put('/finishOrder', isAuthenticated, new FinishOrderController().handle);
 router.post('/createOrder/addItem', isAuthenticated, new CreateItemController().handle);
 router.delete('/createOrder/deleteItem', isAuthenticated, new DeleteItemController().handle);
 
+// // User routes
+// router.post('/users', new CreateUserController().handle); // Criar usuário
+// router.post('/sessions', new AuthUserController().handle); // Iniciar sessão
+// router.get('/users/me', isAuthenticated, new DetailUserController().handle); // Obter detalhes do usuário logado
+
+// // Category routes
+// router.post('/categories', isAuthenticated, new CreateCategoryController().handle); // Criar categoria
+// router.get('/categories', isAuthenticated, new ListCategoryController().handle); // Listar categorias
+
+// // Product routes
+// router.post('/products', isAuthenticated, upload.single('file'), new CreateProductController().handle); // Criar produto
+// router.get('/categories/:id/products', isAuthenticated, new ListProductByCategoryController().handle); // Listar produtos por categoria
+
+// // Order routes
+// router.post('/orders', isAuthenticated, new CreateOrderController().handle); // Criar pedido
+// router.put('/orders/:id/send', isAuthenticated, new SendOrderController().handle); // Marcar pedido como enviado
+// router.delete('/orders/:id', isAuthenticated, new DeleteOrderController().handle); // Deletar pedido
+// router.get('/orders', isAuthenticated, new ListOrderController().handle); // Listar pedidos
+// router.get('/orders/:id', isAuthenticated, new DetailOrderController().handle); // Detalhar pedido
+// router.put('/orders/:id/finish', isAuthenticated, new FinishOrderController().handle); // Finalizar pedido
+
+// // Item routes
+// router.post('/orders/:orderId/items', isAuthenticated, new CreateItemController().handle); // Adicionar item ao pedido
+// router.delete('/orders/:orderId/items/:itemId', isAuthenticated, new DeleteItemController().handle); // Remover item do pedido
 
 
 
