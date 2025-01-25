@@ -17,14 +17,24 @@ const prisma_1 = __importDefault(require("../../prisma"));
 class CreateItemService {
     execute(_a) {
         return __awaiter(this, arguments, void 0, function* ({ orderId, productId, amount }) {
-            const order = yield prisma_1.default.item.create({
-                data: {
-                    orderId: orderId,
-                    productId: productId,
-                    amount: +amount,
-                },
-            });
-            return order;
+            try {
+                const order = yield prisma_1.default.item.create({
+                    data: {
+                        orderId: orderId,
+                        productId: productId,
+                        amount: +amount,
+                    },
+                });
+                return order;
+            }
+            catch (err) {
+                if (err instanceof Error) {
+                    throw new Error("Erro ao adicionar item. " + err.message);
+                }
+                else {
+                    throw new Error("Erro inesperado.");
+                }
+            }
         });
     }
 }

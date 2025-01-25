@@ -17,12 +17,22 @@ const prisma_1 = __importDefault(require("../../prisma"));
 class ListProductByCategoryService {
     execute(_a) {
         return __awaiter(this, arguments, void 0, function* ({ categoryId }) {
-            const findByCategory = yield prisma_1.default.product.findMany({
-                where: {
-                    categoryId: categoryId,
+            try {
+                const findByCategory = yield prisma_1.default.product.findMany({
+                    where: {
+                        categoryId: categoryId,
+                    },
+                });
+                return findByCategory;
+            }
+            catch (err) {
+                if (err instanceof Error) {
+                    throw new Error("Erro na conexão com o banco de dados. " + err.message);
                 }
-            });
-            return findByCategory;
+                else {
+                    throw new Error("Erro genérico.");
+                }
+            }
         });
     }
 }

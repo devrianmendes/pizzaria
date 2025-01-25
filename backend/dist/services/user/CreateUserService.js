@@ -18,30 +18,38 @@ const bcryptjs_1 = require("bcryptjs");
 class CreateUserService {
     execute(_a) {
         return __awaiter(this, arguments, void 0, function* ({ name, email, password }) {
-            if (!email) {
-                throw new Error("Email incorreto");
-            }
-            const userAlreadyExist = yield prisma_1.default.user.findFirst({
-                where: {
-                    email: email,
+            try {
+                const userAlreadyExist = yield prisma_1.default.user.findFirst({
+                    where: {
+                        email: email,
+                    },
+                });
+                if (userAlreadyExist) {
+                    throw new Error("E-mail já cadastrado.");
                 }
-            });
-            if (userAlreadyExist) {
-                throw new Error("E-mail já cadastrado.");
+                const passwordHash = yield (0, bcryptjs_1.hash)(password, 8);
+                const user = yield prisma_1.default.user.create({
+                    data: {
+                        name: name,
+                        email: email,
+                        password: passwordHash,
+                    },
+                    select: {
+                        id: true,
+                        name: true,
+                        email: true,
+                    },
+                });
+                return user;
             }
-            const passwordHash = yield (0, bcryptjs_1.hash)(password, 8);
-            const user = yield prisma_1.default.user.create({
-                data: {
-                    name: name,
-                    email: email,
-                    password: passwordHash
-                }, select: {
-                    id: true,
-                    name: true,
-                    email: true,
+            catch (err) {
+                if (err instanceof Error) {
+                    throw new Error(`Erro ao criar usuário: ${err.message}`);
                 }
-            });
-            return user;
+                else {
+                    throw new Error("Erro genérico.");
+                }
+            }
         });
     }
 }

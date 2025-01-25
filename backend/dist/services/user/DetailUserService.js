@@ -17,17 +17,27 @@ const prisma_1 = __importDefault(require("../../prisma"));
 class DetailUserService {
     execute(user_id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = yield prisma_1.default.user.findFirst({
-                where: {
-                    id: user_id,
-                },
-                select: {
-                    id: true,
-                    name: true,
-                    email: true,
-                },
-            });
-            return user;
+            try {
+                const user = yield prisma_1.default.user.findFirst({
+                    where: {
+                        id: user_id,
+                    },
+                    select: {
+                        id: true,
+                        name: true,
+                        email: true,
+                    },
+                });
+                return user;
+            }
+            catch (err) {
+                if (err instanceof Error) {
+                    throw new Error(`Erro ao buscar dados do usuário: ${err.message}`);
+                }
+                else {
+                    throw new Error("Erro genérico.");
+                }
+            }
         });
     }
 }

@@ -15,9 +15,24 @@ class DetailOrderController {
     handle(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const orderId = req.query.orderId;
-            const detailOrderService = new DetailOrderService_1.DetailOrderService();
-            const detailOrder = yield detailOrderService.execute({ orderId });
-            return res.json(detailOrder);
+            try {
+                const detailOrderService = new DetailOrderService_1.DetailOrderService();
+                if (!orderId) {
+                    return res
+                        .status(400)
+                        .json({ message: "Erro ao detalhar pedido. Id faltante." });
+                }
+                const detailOrder = yield detailOrderService.execute({ orderId });
+                return res.status(200).json(detailOrder);
+            }
+            catch (err) {
+                if (err instanceof Error) {
+                    return res.status(500).json({ message: err.message });
+                }
+                else {
+                    return res.status(500).json({ message: "Erro inesperado." });
+                }
+            }
         });
     }
 }

@@ -17,16 +17,26 @@ const prisma_1 = __importDefault(require("../../prisma"));
 class ListOrderService {
     execute() {
         return __awaiter(this, void 0, void 0, function* () {
-            const listOrder = yield prisma_1.default.order.findMany({
-                where: {
-                    draft: false,
-                    status: false,
-                },
-                orderBy: {
-                    createdAt: 'asc'
-                },
-            });
-            return listOrder;
+            try {
+                const listOrder = yield prisma_1.default.order.findMany({
+                    where: {
+                        draft: false,
+                        status: false,
+                    },
+                    orderBy: {
+                        createdAt: "asc",
+                    },
+                });
+                return listOrder;
+            }
+            catch (err) {
+                if (err instanceof Error) {
+                    throw new Error("Erro na conexão com o banco de dados. " + err.message);
+                }
+                else {
+                    throw new Error("Erro genérico.");
+                }
+            }
         });
     }
 }

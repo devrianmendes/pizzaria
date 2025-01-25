@@ -15,9 +15,25 @@ class CreateOrderController {
     handle(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { table, name } = req.body;
-            const createOrderController = new CreateOrderService_1.CreateOrderService();
-            const order = yield createOrderController.execute({ table, name });
-            return res.json(order);
+            // return res.status(400).json({message: 'erro irmao'});
+            try {
+                if (!table || !name) {
+                    return res
+                        .status(400)
+                        .json({ message: "Erro ao criar pedido. Mesa ou nome faltantes." });
+                }
+                const createOrderController = new CreateOrderService_1.CreateOrderService();
+                const order = yield createOrderController.execute({ table, name });
+                return res.status(201).json(order);
+            }
+            catch (err) {
+                if (err instanceof Error) {
+                    return res.status(500).json({ message: err.message });
+                }
+                else {
+                    return res.status(500).json({ message: "Erro inesperado." });
+                }
+            }
         });
     }
 }

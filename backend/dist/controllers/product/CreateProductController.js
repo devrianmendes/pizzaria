@@ -15,20 +15,36 @@ class CreateProductController {
     handle(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { name, description, price, categoryId } = req.body;
-            const createProductService = new CreateProductService_1.CreateProductService();
-            if (!req.file) {
-                throw new Error("É necessário enviar uma foto para o produto.");
+            try {
+                if (!name || !price || !description || !categoryId)
+                    return res
+                        .status(400)
+                        .json({ message: "Erro ao criar produto. Preencha os dados." });
+                if (!req.file) {
+                    return res
+                        .status(400)
+                        .json({ message: "É necessário enviar uma foto para o produto." });
+                }
+                else {
+                    const { originalname, filename: banner } = req.file;
+                    const createProductService = new CreateProductService_1.CreateProductService();
+                    const product = yield createProductService.execute({
+                        name,
+                        description,
+                        price,
+                        banner,
+                        categoryId,
+                    });
+                    return res.status(200).json(product);
+                }
             }
-            else {
-                const { originalname, filename: banner } = req.file;
-                const product = yield createProductService.execute({
-                    name,
-                    description,
-                    price,
-                    banner,
-                    categoryId,
-                });
-                return res.json(product);
+            catch (err) {
+                if (err instanceof Error) {
+                    return res.status(500).json({ message: err.message });
+                }
+                else {
+                    return res.status(500).json({ message: "Erro inesperado." });
+                }
             }
         });
     }

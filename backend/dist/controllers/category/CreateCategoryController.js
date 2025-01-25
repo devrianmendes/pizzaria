@@ -15,9 +15,22 @@ class CreateCategoryController {
     handle(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { name } = req.body;
-            const createCategoryService = new CreateCategoryService_1.CreateCategoryService();
-            const category = yield createCategoryService.execute({ name });
-            return res.json(category);
+            try {
+                if (!name || name.trim() === "") {
+                    return res.status(400).json({ message: "Nome inválido." });
+                }
+                const createCategoryService = new CreateCategoryService_1.CreateCategoryService();
+                const category = yield createCategoryService.execute({ name });
+                return res.status(201).json(category);
+            }
+            catch (err) {
+                if (err instanceof Error) {
+                    return res.status(500).json({ message: err.message });
+                }
+                else {
+                    return res.status(500).json({ message: "Erro inesperado." });
+                }
+            }
         });
     }
 }

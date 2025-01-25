@@ -15,8 +15,18 @@ class ListCategoryController {
     handle(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const listCategoryService = new ListCategoryServices_1.ListCategoryService();
-            const category = yield listCategoryService.execute();
-            return res.json(category);
+            try {
+                const category = yield listCategoryService.execute();
+                return res.status(200).json(category);
+            }
+            catch (err) {
+                if (err instanceof Error) {
+                    return res.status(500).json({ message: err.message });
+                }
+                else {
+                    return res.status(500).json({ message: "Erro inesperado." });
+                }
+            }
         });
     }
 }

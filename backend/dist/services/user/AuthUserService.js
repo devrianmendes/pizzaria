@@ -19,33 +19,43 @@ const jsonwebtoken_1 = require("jsonwebtoken");
 class AuthUserService {
     execute(_a) {
         return __awaiter(this, arguments, void 0, function* ({ email, password }) {
-            const user = yield prisma_1.default.user.findFirst({
-                where: {
-                    email: email,
-                },
-            });
-            if (!user) {
-                throw new Error("Usuário ou password incorreto.");
-            }
-            const passwordMatch = yield (0, bcryptjs_1.compare)(password, user.password);
-            if (!passwordMatch) {
-                throw new Error("Usuário ou password incorreto.");
-            }
             if (!process.env.SECRET)
-                throw new Error("Erro interno.");
-            const token = (0, jsonwebtoken_1.sign)({
-                name: user.name,
-                email: user.email,
-            }, process.env.SECRET, {
-                subject: user.id,
-                expiresIn: "30d",
-            });
-            return {
-                id: user.id,
-                name: user.name,
-                email: user.email,
-                token: token,
-            };
+                throw new Error("Erro interno. Configuração do servidor inválida.");
+            try {
+                const user = yield prisma_1.default.user.findFirst({
+                    where: {
+                        email: email,
+                    },
+                });
+                if (!user) {
+                    throw new Error("Usuário não encontrado.");
+                }
+                const passwordMatch = yield (0, bcryptjs_1.compare)(password, user.password);
+                if (!passwordMatch) {
+                    throw new Error("Usuário ou senha inválidos.");
+                }
+                const token = (0, jsonwebtoken_1.sign)({
+                    name: user.name,
+                    email: user.email,
+                }, process.env.SECRET, {
+                    subject: user.id,
+                    expiresIn: "30d",
+                });
+                return {
+                    id: user.id,
+                    name: user.name,
+                    email: user.email,
+                    token: token,
+                };
+            }
+            catch (err) {
+                if (err instanceof Error) {
+                    throw new Error(`Erro ao autenticar: ${err.message}`);
+                }
+                else {
+                    throw new Error("Erro inesperado.");
+                }
+            }
         });
     }
 }

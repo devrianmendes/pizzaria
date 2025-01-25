@@ -17,13 +17,23 @@ const prisma_1 = __importDefault(require("../../prisma"));
 class ListCategoryService {
     execute() {
         return __awaiter(this, void 0, void 0, function* () {
-            const category = yield prisma_1.default.category.findMany({
-                select: {
-                    id: true,
-                    name: true,
-                },
-            });
-            return category;
+            try {
+                const category = yield prisma_1.default.category.findMany({
+                    select: {
+                        id: true,
+                        name: true,
+                    },
+                });
+                return category;
+            }
+            catch (err) {
+                if (err instanceof Error) {
+                    throw new Error("Erro ao carregar as categorias. " + err.message);
+                }
+                else {
+                    throw new Error("Erro inesperado.");
+                }
+            }
         });
     }
 }

@@ -17,12 +17,22 @@ const prisma_1 = __importDefault(require("../../prisma"));
 class DeleteOrderService {
     execute(_a) {
         return __awaiter(this, arguments, void 0, function* ({ orderId }) {
-            const order = yield prisma_1.default.order.delete({
-                where: {
-                    id: orderId,
-                },
-            });
-            return order;
+            try {
+                const order = yield prisma_1.default.order.delete({
+                    where: {
+                        id: orderId,
+                    },
+                });
+                return order;
+            }
+            catch (err) {
+                if (err instanceof Error) {
+                    throw new Error("Erro ao deletar categoria. " + err.message);
+                }
+                else {
+                    throw new Error("Erro inesperado.");
+                }
+            }
         });
     }
 }

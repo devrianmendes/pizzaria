@@ -17,13 +17,23 @@ const prisma_1 = __importDefault(require("../../prisma"));
 class CreateOrderService {
     execute(_a) {
         return __awaiter(this, arguments, void 0, function* ({ table, name }) {
-            const order = yield prisma_1.default.order.create({
-                data: {
-                    table: table,
-                    name: name,
+            try {
+                const order = yield prisma_1.default.order.create({
+                    data: {
+                        table: table,
+                        name: name,
+                    },
+                });
+                return order;
+            }
+            catch (err) {
+                if (err instanceof Error) {
+                    throw new Error("Erro ao criar pedido. " + err.message);
                 }
-            });
-            return order;
+                else {
+                    throw new Error("Erro inesperado.");
+                }
+            }
         });
     }
 }

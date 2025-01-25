@@ -17,15 +17,25 @@ const prisma_1 = __importDefault(require("../../prisma"));
 class SendOrderService {
     execute(_a) {
         return __awaiter(this, arguments, void 0, function* ({ orderId }) {
-            const order = yield prisma_1.default.order.update({
-                where: {
-                    id: orderId,
-                },
-                data: {
-                    draft: false,
-                },
-            });
-            return order;
+            try {
+                const order = yield prisma_1.default.order.update({
+                    where: {
+                        id: orderId,
+                    },
+                    data: {
+                        draft: false,
+                    },
+                });
+                return order;
+            }
+            catch (err) {
+                if (err instanceof Error) {
+                    throw new Error("Erro na conexão com o banco de dados. " + err.message);
+                }
+                else {
+                    throw new Error("Erro genérico.");
+                }
+            }
         });
     }
 }

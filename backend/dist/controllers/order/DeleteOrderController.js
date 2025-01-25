@@ -15,9 +15,24 @@ class DeleteOrderController {
     handle(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const orderId = req.query.orderId;
-            const deleteOrderService = new DeleteOrderService_1.DeleteOrderService();
-            const deleteOrder = yield deleteOrderService.execute({ orderId });
-            return res.json(deleteOrder);
+            try {
+                if (!orderId) {
+                    return res
+                        .status(400)
+                        .json({ message: "Erro ao excluir pedido. Id faltante." });
+                }
+                const deleteOrderService = new DeleteOrderService_1.DeleteOrderService();
+                const deleteOrder = yield deleteOrderService.execute({ orderId });
+                return res.status(200).json(deleteOrder);
+            }
+            catch (err) {
+                if (err instanceof Error) {
+                    return res.status(500).json({ message: err.message });
+                }
+                else {
+                    return res.status(500).json({ message: "Erro inesperado." });
+                }
+            }
         });
     }
 }

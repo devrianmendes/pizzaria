@@ -17,12 +17,22 @@ const prisma_1 = __importDefault(require("../../prisma"));
 class DeleteItemService {
     execute(_a) {
         return __awaiter(this, arguments, void 0, function* ({ itemId }) {
-            const order = yield prisma_1.default.item.delete({
-                where: {
-                    id: itemId,
+            try {
+                const order = yield prisma_1.default.item.delete({
+                    where: {
+                        id: itemId,
+                    },
+                });
+                return order;
+            }
+            catch (err) {
+                if (err instanceof Error) {
+                    throw new Error("Erro ao deletar item do pedido. " + err.message);
                 }
-            });
-            return order;
+                else {
+                    throw new Error("Erro inesperado.");
+                }
+            }
         });
     }
 }

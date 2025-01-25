@@ -17,32 +17,41 @@ const prisma_1 = __importDefault(require("../../prisma"));
 class DetailOrderService {
     execute(_a) {
         return __awaiter(this, arguments, void 0, function* ({ orderId }) {
-            const order = yield prisma_1.default.item.findMany({
-                where: {
-                    orderId: orderId,
-                },
-                select: {
-                    id: true,
-                    amount: true,
-                    // Aqui, você pode incluir o produto e o pedido, como estava comentado:
-                    product: {
-                        select: {
-                            id: true,
-                            name: true,
-                            description: true,
-                            price: true,
+            try {
+                const order = yield prisma_1.default.item.findMany({
+                    where: {
+                        orderId: orderId,
+                    },
+                    select: {
+                        id: true,
+                        amount: true,
+                        product: {
+                            select: {
+                                id: true,
+                                name: true,
+                                description: true,
+                                price: true,
+                            },
+                        },
+                        order: {
+                            select: {
+                                id: true,
+                                name: true,
+                                table: true,
+                            },
                         },
                     },
-                    order: {
-                        select: {
-                            id: true,
-                            name: true,
-                            table: true,
-                        },
-                    },
-                },
-            });
-            return order;
+                });
+                return order;
+            }
+            catch (err) {
+                if (err instanceof Error) {
+                    throw new Error("Erro ao carregar pedido. " + err.message);
+                }
+                else {
+                    throw new Error("Erro inesperado.");
+                }
+            }
         });
     }
 }

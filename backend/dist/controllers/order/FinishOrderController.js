@@ -15,9 +15,24 @@ class FinishOrderController {
     handle(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { orderId } = req.body;
-            const finishOrderService = new FinishOrderService_1.FinishOrderService();
-            const finishOrder = yield finishOrderService.execute({ orderId });
-            return res.json(finishOrder);
+            try {
+                if (!orderId) {
+                    return res
+                        .status(400)
+                        .json({ message: "Erro ao encerrar pedido. Id faltante." });
+                }
+                const finishOrderService = new FinishOrderService_1.FinishOrderService();
+                const finishOrder = yield finishOrderService.execute({ orderId });
+                return res.status(200).json(finishOrder);
+            }
+            catch (err) {
+                if (err instanceof Error) {
+                    return res.status(500).json({ message: err.message });
+                }
+                else {
+                    return res.status(500).json({ message: "Erro inesperado." });
+                }
+            }
         });
     }
 }

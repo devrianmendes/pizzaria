@@ -15,9 +15,24 @@ class DeleteItemController {
     handle(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const itemId = req.query.itemId;
-            const deleteItemService = new DeleteItemService_1.DeleteItemService();
-            const item = yield deleteItemService.execute({ itemId });
-            return res.json(item);
+            if (!itemId) {
+                return res
+                    .status(400)
+                    .json({ message: "Erro ao deletar item. Id faltante." });
+            }
+            try {
+                const deleteItemService = new DeleteItemService_1.DeleteItemService();
+                const item = yield deleteItemService.execute({ itemId });
+                return res.status(200).json(item);
+            }
+            catch (err) {
+                if (err instanceof Error) {
+                    return res.status(500).json({ message: err.message });
+                }
+                else {
+                    return res.status(500).json({ message: "Erro inesperado." });
+                }
+            }
         });
     }
 }

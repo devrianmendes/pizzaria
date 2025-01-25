@@ -14,9 +14,19 @@ const ListOrderService_1 = require("../../services/order/ListOrderService");
 class ListOrderController {
     handle(Req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const listOrderService = new ListOrderService_1.ListOrderService();
-            const listOrder = yield listOrderService.execute();
-            return res.json(listOrder);
+            try {
+                const listOrderService = new ListOrderService_1.ListOrderService();
+                const listOrder = yield listOrderService.execute();
+                return res.status(200).json(listOrder);
+            }
+            catch (err) {
+                if (err instanceof Error) {
+                    return res.status(500).json({ message: err.message });
+                }
+                else {
+                    return res.status(500).json({ message: "Erro inesperado." });
+                }
+            }
         });
     }
 }

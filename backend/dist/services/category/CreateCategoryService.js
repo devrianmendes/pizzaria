@@ -17,19 +17,21 @@ const prisma_1 = __importDefault(require("../../prisma"));
 class CreateCategoryService {
     execute(_a) {
         return __awaiter(this, arguments, void 0, function* ({ name }) {
-            if (name === "") {
-                throw new Error("Nome inválido.");
+            try {
+                const category = yield prisma_1.default.category.create({
+                    data: { name },
+                    select: { id: true, name: true },
+                });
+                return category;
             }
-            const category = yield prisma_1.default.category.create({
-                data: {
-                    name: name,
-                },
-                select: {
-                    id: true,
-                    name: true,
-                },
-            });
-            return category;
+            catch (err) {
+                if (err instanceof Error) {
+                    throw new Error("Erro na conexão com o banco de dados. " + err.message);
+                }
+                else {
+                    throw new Error("Erro genérico.");
+                }
+            }
         });
     }
 }

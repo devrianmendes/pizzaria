@@ -17,16 +17,26 @@ const prisma_1 = __importDefault(require("../../prisma"));
 class CreateProductService {
     execute(_a) {
         return __awaiter(this, arguments, void 0, function* ({ name, price, description, banner, categoryId, }) {
-            const product = yield prisma_1.default.product.create({
-                data: {
-                    name: name,
-                    price: price,
-                    description: description,
-                    banner: banner,
-                    categoryId: categoryId,
-                },
-            });
-            return product;
+            try {
+                const product = yield prisma_1.default.product.create({
+                    data: {
+                        name: name,
+                        price: price,
+                        description: description,
+                        banner: banner,
+                        categoryId: categoryId,
+                    },
+                });
+                return product;
+            }
+            catch (err) {
+                if (err instanceof Error) {
+                    throw new Error("Erro na conexão com o banco de dados. " + err.message);
+                }
+                else {
+                    throw new Error("Erro genérico.");
+                }
+            }
         });
     }
 }

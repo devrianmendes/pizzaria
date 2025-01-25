@@ -15,9 +15,24 @@ class SendOrderController {
     handle(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { orderId } = req.body;
-            const sendOrderService = new SendOrderService_1.SendOrderService();
-            const order = yield sendOrderService.execute({ orderId });
-            return res.json(order);
+            try {
+                if (!orderId) {
+                    return res
+                        .status(400)
+                        .json({ message: "Erro ao enviar pedido. Id Faltante." });
+                }
+                const sendOrderService = new SendOrderService_1.SendOrderService();
+                const order = yield sendOrderService.execute({ orderId });
+                return res.status(200).json(order);
+            }
+            catch (err) {
+                if (err instanceof Error) {
+                    return res.status(500).json({ message: err.message });
+                }
+                else {
+                    return res.status(500).json({ message: "Erro inesperado." });
+                }
+            }
         });
     }
 }

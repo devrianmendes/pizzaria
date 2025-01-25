@@ -15,9 +15,22 @@ class DetailUserController {
     handle(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const user_id = req.user_id;
-            const detailUserService = new DetailUserService_1.DetailUserService();
-            const user = yield detailUserService.execute(user_id);
-            return res.json(user);
+            try {
+                if (!user_id) {
+                    return res.status(400).json("Erro ao detalhar usuário. Id faltante.");
+                }
+                const detailUserService = new DetailUserService_1.DetailUserService();
+                const user = yield detailUserService.execute(user_id);
+                return res.status(200).json(user);
+            }
+            catch (err) {
+                if (err instanceof Error) {
+                    return res.status(500).json({ message: err.message });
+                }
+                else {
+                    return res.status(500).json({ message: "Erro inesperado." });
+                }
+            }
         });
     }
 }
