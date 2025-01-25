@@ -29,7 +29,7 @@ const validateToken = async (token: string) => {
   if (!token) return false;
 
   try {
-    await api.get("/detailUser", {
+    await api.get("/user/me", {
       headers: {
         Authorization: `Bearer ${token}`,
       },

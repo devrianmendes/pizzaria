@@ -5,7 +5,7 @@ import { api } from "@/services/app";
 export default async function Product() {
   const token = await getCookieServer();
 
-  const response = await api.get("/listCategory", {
+  const response = await api.get("/category", {
     headers: {
       Authorization: `Bearer ${token}`,
     },

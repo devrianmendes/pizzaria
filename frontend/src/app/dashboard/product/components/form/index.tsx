@@ -23,7 +23,6 @@ export function Form({ categories }: DataProps) {
   const router = useRouter();
 
   const handleRegisterProduct = async (formData: FormData) => {
-
     const category = formData.get("category");
     const name = formData.get("name");
     const price = formData.get("price");
@@ -45,7 +44,7 @@ export function Form({ categories }: DataProps) {
     const token = getCookieClient();
 
     await api
-      .post("/createProduct", data, {
+      .post("/product", data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

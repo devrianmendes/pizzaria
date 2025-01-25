@@ -60,7 +60,7 @@ const page = ({ params, searchParams }: ParamsType) => {
 
   const loadOrderList = async () => {
     const response = await api
-      .get("/detailOrder", {
+      .get(`/order/${orderId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -91,7 +91,7 @@ const page = ({ params, searchParams }: ParamsType) => {
     }
 
     const response = await api
-      .post("/createOrder/addItem", data, {
+      .post(`/order/${data.orderId}/items`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -110,7 +110,7 @@ const page = ({ params, searchParams }: ParamsType) => {
 
   const handleDelItem = async (id: string) => {
     try {
-      const response = await api.delete("/createOrder/deleteItem", {
+      const response = await api.delete(`/order/${orderId}/item/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -135,7 +135,7 @@ const page = ({ params, searchParams }: ParamsType) => {
 
   const handleDelOrder = async () => {
     const response = await api
-      .delete("/deleteOrder", {
+      .delete(`/order/${orderId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -147,19 +147,20 @@ const page = ({ params, searchParams }: ParamsType) => {
         console.log(err);
         return;
       });
-      router.push("/dashboard");
+    router.push("/dashboard");
   };
 
   useEffect(() => {
     const getCategoryList = async () => {
       const response = await api
-        .get("/listCategory", {
+        .get("/category", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         })
-        .catch((err) => {
-          console.log(err);
+        .catch((err: any) => {
+          toast.error(err.response.data.message);
+          console.log(err.response.data.message);
           return;
         });
 
@@ -171,10 +172,11 @@ const page = ({ params, searchParams }: ParamsType) => {
 
   useEffect(() => {
     const categoryId = selectedCategory;
+    if (!categoryId) return;
 
     const getProductList = async () => {
       const response = await api
-        .get("/listProductByCategory", {
+        .get(`/category/${categoryId}/products`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -189,6 +191,7 @@ const page = ({ params, searchParams }: ParamsType) => {
 
       setProductList(response.data);
     };
+
     getProductList();
   }, [selectedCategory]);
 
@@ -200,7 +203,11 @@ const page = ({ params, searchParams }: ParamsType) => {
             <h3>
               Mesa <span>{table}</span>
             </h3>
-            <TrashIcon className={styles.trash} color="#ff3f4b" onClick={handleDelOrder} />
+            <TrashIcon
+              className={styles.trash}
+              color="#ff3f4b"
+              onClick={handleDelOrder}
+            />
           </header>
 
           <div>
@@ -222,11 +229,12 @@ const page = ({ params, searchParams }: ParamsType) => {
               value={selectedProduct}
             >
               <option value={"default"}>Produtos...</option>
-              {productList.map((eachProduct, i) => (
-                <option value={eachProduct.id} key={eachProduct.id}>
-                  {eachProduct.name}
-                </option>
-              ))}
+              {Array.isArray(productList) &&
+                productList.map((eachProduct) => (
+                  <option value={eachProduct.id} key={eachProduct.id}>
+                    {eachProduct.name}
+                  </option>
+                ))}
             </select>
           </div>
           <div className={styles.quantity}>
@@ -264,6 +272,7 @@ const page = ({ params, searchParams }: ParamsType) => {
               <li key={eachItem.id}>
                 {eachItem.amount} {eachItem.product.name}
                 <X
+                  className={styles.close}
                   size={30}
                   color="#ff3f4b"
                   onClick={() => handleDelItem(eachItem.id)}

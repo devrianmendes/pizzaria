@@ -52,7 +52,7 @@ export function OrderProvider({ children }: OrderProviderProps) {
   const onRequestOpen = async (orderId: string) => {
     const token = getCookieClient();
 
-    const response = await api.get("/detailOrder", {
+    const response = await api.get(`/order/${orderId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -61,11 +61,8 @@ export function OrderProvider({ children }: OrderProviderProps) {
       },
     });
 
-    if(response.data.length < 1) {
-      
+    if (response.data.length < 1) {
     }
-
-    console.log(response)
 
     setOrder(response.data);
     setIsOpen(true);
@@ -83,7 +80,7 @@ export function OrderProvider({ children }: OrderProviderProps) {
     };
 
     try {
-      await api.put("/finishOrder", data, {
+      await api.patch(`/order/${orderId}/finish`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -104,7 +101,7 @@ export function OrderProvider({ children }: OrderProviderProps) {
     const data = { orderId };
 
     try {
-      const response = await api.put("/createOrder/send", data, {
+      const response = await api.patch(`/order/${data.orderId}/send`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -51,7 +51,7 @@ export default function Home() {
         <Image src={logoImg} alt="Logo da pizzaria" className={styles.logo} />
       </div> */}
       <picture className={styles.logoWrapper}>
-        <source srcSet="logoMobile.png" media="(max-width: 720px)" />
+        <source srcSet="logoMobile.svg" media="(max-width: 720px)" />
         <Image src={logoImg} alt="" className={styles.logo}/>
       </picture>
 

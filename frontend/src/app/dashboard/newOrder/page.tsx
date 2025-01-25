@@ -9,6 +9,7 @@ const page = () => {
     "use server";
     const clientName = formData.get("clientName");
     const tableNumber = formData.get("tableNumber");
+    const token = await getCookieServer();
 
     let orderId = "";
 
@@ -16,37 +17,37 @@ const page = () => {
       return;
     }
 
-    const token = await getCookieServer();
-
     const data = {
       name: clientName,
       table: +tableNumber,
     };
 
-    const response = await api
-      .post("/createOrder", data, {
+    try {
+      const response = await api.post("/order", data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      })
-      .catch((err) => {
-        console.log(err);
-        return;
       });
 
-    if (!response) return;
-
-    orderId = response.data.id;
-
-    redirect(
-      `/dashboard/newOrder/${tableNumber}/details?orderId=${orderId}`
-    );
+      if (response.data) {
+        orderId = response.data.id;
+      }
+    } catch (err) {
+      if (err instanceof Error)
+        console.log(`Erro ao carregar pedido: ${err.message}`);
+    } finally {
+      if (orderId) {
+        redirect(
+          `/dashboard/newOrder/${tableNumber}/details?orderId=${orderId}`
+        );
+      }
+    }
   };
 
   return (
     <section className={styles.container}>
       <form action={handleOpenOrder} className={styles.form}>
-      <h1>Novo pedido</h1>
+        <h1>Novo pedido</h1>
         <input
           type="text"
           placeholder="Nome do cliente"

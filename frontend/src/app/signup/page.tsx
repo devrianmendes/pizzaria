@@ -16,7 +16,7 @@ export default function Signup() {
       console.log("Preencha os campos.");
 
     try {
-      await api.post("/createUser", {
+      await api.post("/user", {
         name,
         email,
         password,
@@ -32,7 +32,7 @@ export default function Signup() {
     <main>
       <div className={styles.containerCenter}>
       <picture className={styles.logoWrapper}>
-        <source srcSet="logoMobile.png" media="(max-width: 720px)" />
+        <source srcSet="logoMobile.svg" media="(max-width: 720px)" />
         <Image src={logoImg} alt="" className={styles.logo}/>
       </picture>
         <section className={styles.login}>

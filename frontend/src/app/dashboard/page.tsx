@@ -4,10 +4,11 @@ import { getCookieServer } from "@/lib/cookieServer";
 import { OrderProps } from "@/lib/order.type";
 
 const getOrders = async (): Promise<OrderProps[] | []> => {
+
   try {
     const token = await getCookieServer();
 
-    const response = await api.get("/listOrder", {
+    const response = await api.get("/order", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
