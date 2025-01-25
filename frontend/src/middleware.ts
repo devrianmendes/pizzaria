@@ -36,5 +36,7 @@ const validateToken = async (token: string) => {
     });
 
     return true;
-  } catch (error) {}
+  } catch (error) {
+    return error;
+  }
 };

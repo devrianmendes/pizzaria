@@ -1,5 +1,4 @@
 import logoImg from "@/../public/logoSignin.svg";
-import logoMobile from "@/../public/logoMobile.png";
 import styles from "./page.module.scss";
 import Image from "next/image";
 import Link from "next/link";

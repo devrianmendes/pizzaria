@@ -4,8 +4,6 @@ import { api } from "@/services/app";
 import { Button } from "../components/button";
 import styles from "./styles.module.scss";
 import { getCookieClient } from "@/lib/cookieClient";
-import { redirect } from "next/navigation";
-import Error from "@/app/dashboard/components/error";
 import { toast } from "sonner";
 
 export default function Category() {
@@ -19,14 +17,11 @@ export default function Category() {
     const token = await getCookieClient();
 
     try {
-      const response = await api.post("/category", data, {
+      await api.post("/category", data, {
         headers: { Authorization: `Bearer ${token}` },
       });
       toast.success("Categoria cadastrada.");
-      // redirect("/dashboard");
     } catch (error: any) {
-      console.log(error)
-      // Garante que o erro tenha uma resposta do Axios
       if (
         error.response &&
         error.response.data &&

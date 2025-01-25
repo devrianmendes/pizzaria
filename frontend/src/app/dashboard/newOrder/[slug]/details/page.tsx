@@ -1,4 +1,5 @@
 "use client";
+/* eslint no-use-before-define: 2 */  // --> ON
 
 import { getCookieClient } from "@/lib/cookieClient";
 import { api } from "@/services/app";
@@ -38,7 +39,7 @@ type DetailOrder = {
   };
 };
 
-const page = ({ params, searchParams }: ParamsType) => {
+const Page = ({ params, searchParams }: ParamsType) => {
   const resolvedParams = use(params);
   const resolvedSearchParams = use(searchParams);
 
@@ -74,7 +75,7 @@ const page = ({ params, searchParams }: ParamsType) => {
         return;
       });
 
-    response && setOrderDetails(response.data);
+    if(response) setOrderDetails(response.data);
   };
 
   const handleAddItem = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -110,7 +111,7 @@ const page = ({ params, searchParams }: ParamsType) => {
 
   const handleDelItem = async (id: string) => {
     try {
-      const response = await api.delete(`/order/${orderId}/item/${id}`, {
+      await api.delete(`/order/${orderId}/item/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -134,7 +135,7 @@ const page = ({ params, searchParams }: ParamsType) => {
   };
 
   const handleDelOrder = async () => {
-    const response = await api
+    await api
       .delete(`/order/${orderId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -168,7 +169,7 @@ const page = ({ params, searchParams }: ParamsType) => {
       setCategoryList(response.data);
     };
     getCategoryList();
-  }, []);
+  }, [token]);
 
   useEffect(() => {
     const categoryId = selectedCategory;
@@ -193,7 +194,7 @@ const page = ({ params, searchParams }: ParamsType) => {
     };
 
     getProductList();
-  }, [selectedCategory]);
+  }, [selectedCategory, token]);
 
   return (
     <main className={styles.container}>
@@ -286,4 +287,4 @@ const page = ({ params, searchParams }: ParamsType) => {
   );
 };
 
-export default page;
+export default Page;
