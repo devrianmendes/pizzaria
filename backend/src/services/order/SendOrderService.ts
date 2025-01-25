@@ -1,30 +1,28 @@
-import prismaClient from '../../prisma';
+import prismaClient from "../../prisma";
 
 type OrderRequest = {
-    orderId: string;
+  orderId: string;
 };
 
 class SendOrderService {
-    async execute({ orderId }: OrderRequest) {
-        if (!orderId) {
-            return Error('Erro ao enviar pedido. Id Faltante.');
-        }
-
-        try {
-            const order = await prismaClient.order.update({
-                where: {
-                    id: orderId,
-                },
-                data: {
-                    draft: false,
-                },
-            });
-            return order;
-        } catch (err) {
-            if (err instanceof Error) {
-                return err.message;
-            }
-        }
+  async execute({ orderId }: OrderRequest) {
+    try {
+      const order = await prismaClient.order.update({
+        where: {
+          id: orderId,
+        },
+        data: {
+          draft: false,
+        },
+      });
+      return order;
+    } catch (err) {
+      if (err instanceof Error) {
+        throw new Error("Erro na conexão com o banco de dados. " + err.message);
+      } else {
+        throw new Error("Erro genérico.");
+      }
     }
+  }
 }
 export { SendOrderService };

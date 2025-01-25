@@ -1,29 +1,29 @@
-import prismaClient from '../../prisma';
+import prismaClient from "../../prisma";
 
 type DeleteOrderRequest = {
-    itemId: string;
+  itemId: string;
 };
 
 class DeleteItemService {
-    async execute({ itemId }: DeleteOrderRequest) {
-        if (!itemId) {
-            return Error('Erro ao deletar item do pedido.');
-        }
+  async execute({ itemId }: DeleteOrderRequest) {
 
-        try {
-            const order = await prismaClient.item.delete({
-                where: {
-                    id: itemId,
-                },
-            });
 
-            return order;
-        } catch (err) {
-            if (err instanceof Error) {
-                return err.message;
-            }
-        }
+    try {
+      const order = await prismaClient.item.delete({
+        where: {
+          id: itemId,
+        },
+      });
+
+      return order;
+    } catch (err) {
+      if (err instanceof Error) {
+        throw new Error("Erro ao deletar item do pedido. " + err.message);
+      } else {
+        throw new Error("Erro inesperado.");
+      }
     }
+  }
 }
 
 export { DeleteItemService };

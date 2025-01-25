@@ -3,11 +3,19 @@ import { ListOrderService } from "../../services/order/ListOrderService";
 
 class ListOrderController {
   async handle(Req: Request, res: Response) {
-    const listOrderService = new ListOrderService();
+    try {
+      const listOrderService = new ListOrderService();
 
-    const listOrder = await listOrderService.execute();
+      const listOrder = await listOrderService.execute();
 
-    return res.json(listOrder);
+      return res.status(200).json(listOrder);
+    } catch (err) {
+      if (err instanceof Error) {
+        return res.status(500).json({ message: err.message });
+      } else {
+        return res.status(500).json({ message: "Erro inesperado." });
+      }
+    }
   }
 }
 export { ListOrderController };

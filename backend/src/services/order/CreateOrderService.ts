@@ -1,31 +1,29 @@
-import prismaClient from '../../prisma';
+import prismaClient from "../../prisma";
 
 type OrderRequest = {
-    table: number;
-    name: string;
+  table: number;
+  name: string;
 };
 
 class CreateOrderService {
-    async execute({ table, name }: OrderRequest) {
-        if (!table || !name) {
-            return Error('Erro ao criar pedido. Mesa ou nome faltantes.');
-        }
+  async execute({ table, name }: OrderRequest) {
+    try {
+      const order = await prismaClient.order.create({
+        data: {
+          table: table,
+          name: name,
+        },
+      });
 
-        try {
-            const order = await prismaClient.order.create({
-                data: {
-                    table: table,
-                    name: name,
-                },
-            });
-
-            return order;
-        } catch (err) {
-            if (err instanceof Error) {
-                return err.message;
-            }
-        }
+      return order;
+    } catch (err) {
+      if (err instanceof Error) {
+        throw new Error("Erro ao criar pedido. " + err.message);
+      } else {
+        throw new Error("Erro inesperado.");
+      }
     }
+  }
 }
 
 export { CreateOrderService };

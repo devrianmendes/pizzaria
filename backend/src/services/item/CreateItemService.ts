@@ -1,32 +1,31 @@
-import prismaClient from '../../prisma';
+import prismaClient from "../../prisma";
 
 type ItemRequest = {
-    orderId: string;
-    productId: string;
-    amount: number;
+  orderId: string;
+  productId: string;
+  amount: number;
 };
 
 class CreateItemService {
-    async execute({ orderId, productId, amount }: ItemRequest) {
-        if (!orderId || !productId || !amount) {
-            return Error('Dados para incluir itens faltantes.');
-        }
+  async execute({ orderId, productId, amount }: ItemRequest) {
+    try {
+      const order = await prismaClient.item.create({
+        data: {
+          orderId: orderId,
+          productId: productId,
+          amount: +amount,
+        },
+      });
 
-        try {
-            const order = await prismaClient.item.create({
-                data: {
-                    orderId: orderId,
-                    productId: productId,
-                    amount: +amount,
-                },
-            });
-            return order;
-        } catch (err) {
-            if (err instanceof Error) {
-                return err.message;
-            }
-        }
+      return order;
+    } catch (err) {
+      if (err instanceof Error) {
+        throw new Error("Erro ao adicionar item. " + err.message);
+      } else {
+        throw new Error("Erro inesperado.");
+      }
     }
+  }
 }
 
 export { CreateItemService };

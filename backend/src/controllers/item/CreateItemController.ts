@@ -7,13 +7,27 @@ class CreateItemController {
 
     const createItemService = new CreateItemService();
 
-    const item = await createItemService.execute({
-      orderId,
-      productId,
-      amount,
-    });
+    try {
+      if (!orderId || !productId || !amount) {
+        return res
+          .status(400)
+          .json({ message: "Dados para incluir itens faltantes." });
+      }
 
-    return res.json(item);
+      const item = await createItemService.execute({
+        orderId,
+        productId,
+        amount,
+      });
+
+      return res.status(201).json(item);
+    } catch (err) {
+      if (err instanceof Error) {
+        return res.status(400).json({ message: err.message });
+      } else {
+        return res.status(500).json({ message: "Erro inesperado." });
+      }
+    }
   }
 }
 
