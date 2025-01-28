@@ -1,5 +1,5 @@
 "use client";
-/* eslint no-use-before-define: 2 */  // --> ON
+/* eslint no-use-before-define: 2 */ // --> ON
 
 import { getCookieClient } from "@/lib/cookieClient";
 import { api } from "@/services/app";
@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { OrderContext } from "../../../../../../providers/order";
 import styles from "./styles.module.scss";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 type CategoryType = {
   id: string;
@@ -36,6 +37,7 @@ type DetailOrder = {
     id: string;
     name: string;
     price: string;
+    banner: string;
   };
 };
 
@@ -48,6 +50,7 @@ const Page = ({ params, searchParams }: ParamsType) => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedProduct, setSelectedProduct] = useState("");
   const [orderDetails, setOrderDetails] = useState<DetailOrder[]>([]);
+  const [orderTotal, setOrderTotal] = useState(0);
   const [quantity, setQuantity] = useState("");
 
   const router = useRouter();
@@ -59,7 +62,7 @@ const Page = ({ params, searchParams }: ParamsType) => {
 
   const token = getCookieClient();
 
-  const loadOrderList = async () => {
+  const loadOrder = async () => {
     const response = await api
       .get(`/order/${orderId}`, {
         headers: {
@@ -75,7 +78,18 @@ const Page = ({ params, searchParams }: ParamsType) => {
         return;
       });
 
-    if(response) setOrderDetails(response.data);
+    if (response) setOrderDetails(response.data);
+  };
+
+  const LoadBanner = (id: string, name: string) => {
+    return (
+      <Image
+        src={`http://localhost:3000/tmp/${id}-${name}.jpg`}
+        alt="Imagem do item pedido."
+        width={50}
+        height={50}
+      />
+    );
   };
 
   const handleAddItem = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -106,7 +120,7 @@ const Page = ({ params, searchParams }: ParamsType) => {
     if (response) {
       toast.success("Item adicionado.");
     }
-    loadOrderList();
+    loadOrder();
   };
 
   const handleDelItem = async (id: string) => {
@@ -119,7 +133,7 @@ const Page = ({ params, searchParams }: ParamsType) => {
           itemId: id,
         },
       });
-      loadOrderList();
+      loadOrder();
       toast.success("Item deletado.");
     } catch (err) {
       if (err instanceof Error) {
@@ -151,6 +165,16 @@ const Page = ({ params, searchParams }: ParamsType) => {
     router.push("/dashboard");
   };
 
+  //Calc order total
+  useEffect(() => {
+    const total = orderDetails.reduce((acc, cur) => {
+      const price = cur.product.price.replace(",", ".");
+      return acc + cur.amount * parseFloat(price);
+    }, 0);
+    setOrderTotal(total);
+  }, [orderDetails]);
+
+  // Load category list
   useEffect(() => {
     const getCategoryList = async () => {
       const response = await api
@@ -171,6 +195,7 @@ const Page = ({ params, searchParams }: ParamsType) => {
     getCategoryList();
   }, [token]);
 
+  //Load product list
   useEffect(() => {
     const categoryId = selectedCategory;
     if (!categoryId) return;
@@ -202,7 +227,7 @@ const Page = ({ params, searchParams }: ParamsType) => {
         <form>
           <header className={styles.formHeader}>
             <h3>
-              Mesa <span>{table}</span>
+              Mesa <span>{table}</span> - Total: <span>R${orderTotal.toFixed(2)}</span>
             </h3>
             <TrashIcon
               className={styles.trash}
@@ -271,7 +296,31 @@ const Page = ({ params, searchParams }: ParamsType) => {
           <ul>
             {orderDetails.map((eachItem) => (
               <li key={eachItem.id}>
-                {eachItem.amount} {eachItem.product.name}
+                <div className={styles.itemBox}>
+                  <div>
+                    <img
+                      src={`http://localhost:3333/tmp/${eachItem.product.banner}`}
+                      alt="Nome"
+                      width={80}
+                      height={80}
+                    ></img>
+                  </div>
+                  <div>
+                    <p>
+                      {eachItem.amount}x {eachItem.product.name} -{" "}
+                      {eachItem.product.description}
+                    </p>
+                    <p>
+                      (Un: R${(+eachItem.product.price.replace(",", ".")).toFixed(2)} /{" "}
+                      {eachItem.amount}x: R$
+                      {(
+                        +eachItem.product.price.replace(",", ".") *
+                        eachItem.amount
+                      ).toFixed(2)}
+                      )
+                    </p>
+                  </div>
+                </div>
                 <X
                   className={styles.close}
                   size={30}

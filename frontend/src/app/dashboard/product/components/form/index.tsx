@@ -43,7 +43,7 @@ export function Form({ categories }: DataProps) {
 
     const token = getCookieClient();
 
-    await api
+    const postProduct = await api
       .post("/product", data, {
         headers: {
           Authorization: `Bearer ${token}`,
