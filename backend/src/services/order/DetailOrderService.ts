@@ -20,6 +20,7 @@ class DetailOrderService {
               name: true,
               description: true,
               price: true,
+              banner: true,
             },
           },
           order: {

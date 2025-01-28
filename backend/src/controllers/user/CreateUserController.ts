@@ -13,12 +13,10 @@ class CreateUserController {
       }
       const createUserService = new CreateUserService();
       const user = await createUserService.execute({ name, email, password });
-      console.log(user)
+      console.log(user);
       return res.status(201).json(user);
     } catch (err) {
       if (err instanceof Error) {
-      console.log(err)
-
         return res.status(500).json({ message: err.message });
       } else {
         return res.status(500).json({ message: "Erro inesperado." });
