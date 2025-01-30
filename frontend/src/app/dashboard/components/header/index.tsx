@@ -33,34 +33,41 @@ export function Header() {
         <nav>
           <ul className={styles.navList}>
             <li>
-              {/* Pedidos */}
-              <Link href="/dashboard/order">Novo pedido</Link>
+              Pedidos
+              <ul className={styles.sublist}>
+                <li>
+                  <Link href="/dashboard/category/new">Criar</Link>
+                </li>
+                <li>
+                  <Link href="/dashboard/category/manage">
+                    Abertos
+                  </Link>
+                </li>
+              </ul>
             </li>
             <li>
               Categoria
-              {/* <Link href="/dashboard/category">Categoria</Link> */}
               <ul className={styles.sublist}>
                 <li>
-                  <Link href="/dashboard/category/create-category">Criar</Link>
+                  <Link href="/dashboard/category/new">Criar</Link>
                 </li>
                 <li>
-                  <Link href="/dashboard/category/delete-category">Excluir</Link>
+                  <Link href="/dashboard/category/manage">
+                    Excluir
+                  </Link>
                 </li>
-                {/* <li>Criar</li>
-                <li>Excluir</li> */}
               </ul>
             </li>
             <li>
               Produtos
               <ul className={styles.sublist}>
                 <li>
-                  <Link href="/dashboard/product/create-product">Criar</Link>
+                  <Link href="/dashboard/product/new">Criar</Link>
                 </li>
                 <li>
-                  <Link href="/dashboard/product/delete-product">Excluir</Link>
+                  <Link href="/dashboard/product/manage">Excluir</Link>
                 </li>
-                {/* <li>Criar</li>
-                <li>Excluir</li> */}
+
               </ul>
             </li>
           </ul>

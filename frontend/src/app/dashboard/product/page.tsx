@@ -1,5 +1,5 @@
 import { getCookieServer } from "@/lib/cookieServer";
-import { Form } from "./create-product/components/createProductForm";
+import { Form } from "./new/components/createProductForm";
 import { api } from "@/services/app";
 
 export default async function Product() {
