@@ -1,7 +1,6 @@
 import { Router } from "express";
 import multer from "multer";
 import uploadConfig from "./config/multer";
-// import { multerConfig } from "./config/multer";
 
 import { CreateUserController } from "./controllers/user/CreateUserController";
 import { AuthUserController } from "./controllers/user/AuthUserController";
@@ -9,9 +8,11 @@ import { DetailUserController } from "./controllers/user/DetailUserController";
 
 import { CreateCategoryController } from "./controllers/category/CreateCategoryController";
 import { ListCategoryController } from "./controllers/category/ListCategoryController";
+import { DeleteCategoryController } from "./controllers/category/DeleteCategoryController";
 
 import { CreateProductController } from "./controllers/product/CreateProductController";
 import { ListProductByCategoryController } from "./controllers/product/ListProductByCategoryController";
+import { DeleteProductController } from "./controllers/product/DeleteProductController";
 
 import { CreateItemController } from "./controllers/item/CreateItemController";
 import { DeleteItemController } from "./controllers/item/DeleteItemController";
@@ -24,13 +25,11 @@ import { DetailOrderController } from "./controllers/order/DetailOrderController
 import { FinishOrderController } from "./controllers/order/FinishOrderController";
 
 import { isAuthenticated } from "./middlewares/isAuthenticated";
-import { extractProductData } from "./middlewares/extractProductData";
+
 
 const router = Router();
 
 const upload = multer(uploadConfig.upload("./tmp"));
-// const upload = multer(multerConfig.upload("./tmp"));
-
 
 //Users routes
 router.post("/user", new CreateUserController().handle);
@@ -44,6 +43,7 @@ router.post(
   new CreateCategoryController().handle
 );
 router.get("/category", isAuthenticated, new ListCategoryController().handle);
+router.delete("/category", isAuthenticated, new DeleteCategoryController().handle);
 
 // Product routes
 router.post(
@@ -53,13 +53,11 @@ router.post(
   new CreateProductController().handle
 );
 
-// router.post(
-//   "/product",
-//   isAuthenticated,
-//   extractProductData, // Middleware para capturar os dados do produto
-//   upload.single("file"), // Middleware do Multer
-//   new CreateProductController().handle // Controlador final
-// );
+router.delete(
+  "/product",
+  isAuthenticated,
+  new DeleteProductController().handle // Controlador final
+);
 
 router.get(
   "/category/:id/products",

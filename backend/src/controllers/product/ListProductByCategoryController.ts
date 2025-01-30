@@ -7,11 +7,9 @@ class ListProductByCategoryController {
 
     try {
       if (!categoryId) {
-        return res
-          .status(400)
-          .json({
-            message: "Erro ao listar produtos. Id da categoria faltante.",
-          });
+        return res.status(400).json({
+          message: "Erro ao listar produtos. Id da categoria faltante.",
+        });
       }
       const listProductByCategory = new ListProductByCategoryService();
 
