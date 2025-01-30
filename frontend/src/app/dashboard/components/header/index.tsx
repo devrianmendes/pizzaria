@@ -33,8 +33,9 @@ export function Header() {
         <nav>
           <ul className={styles.navList}>
             <li>
-              Pedidos
-              <ul className={styles.sublist}>
+            {/* Pedidos */}
+             <Link href="/dashboard/order">Novo pedido</Link> 
+              {/* <ul className={styles.sublist}>
                 <li>
                   <Link href="/dashboard/category/new">Criar</Link>
                 </li>
@@ -43,7 +44,7 @@ export function Header() {
                     Abertos
                   </Link>
                 </li>
-              </ul>
+              </ul> */}
             </li>
             <li>
               Categoria

@@ -1,9 +1,10 @@
 "use server";
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 
 import { api } from "@/services/app";
 import { cookies } from "next/headers";
 
-export default async function AuthUser(state: unknown, formData: FormData) {
+export default async function AuthUser(state: Record<string, unknown>, formData: FormData) {
   const email = formData.get("email");
   const password = formData.get("password");
 
