@@ -2,13 +2,12 @@
 
 import { UploadCloud } from "lucide-react";
 import styles from "./styles.module.scss";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 import Image from "next/image";
 import { Button } from "@/app/dashboard/components/button";
 import { api } from "@/services/app";
 import { getCookieClient } from "@/lib/cookieClient";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 
 type DataProps = {
   categories: {
@@ -20,7 +19,6 @@ type DataProps = {
 export function Form({ categories }: DataProps) {
   const [image, setImage] = useState<File>();
   const [previewImage, setPreviewImage] = useState("");
-  const router = useRouter();
 
   const handleRegisterProduct = async (formData: FormData) => {
     const category = formData.get("category");
@@ -28,8 +26,14 @@ export function Form({ categories }: DataProps) {
     const price = formData.get("price");
     const description = formData.get("description");
 
+    if (category === "" || category === "default") {
+      toast.error("Selecione uma categoria.");
+      setPreviewImage("");
+      return;
+    }
+
     if (!name || !category || !price || !description || !image) {
-      toast.warning("Falha ao cadastrar produto!");
+      toast.warning("Preencha todos os campos!");
       return;
     }
 
@@ -43,20 +47,18 @@ export function Form({ categories }: DataProps) {
 
     const token = getCookieClient();
 
-    const postProduct = await api
-      .post("/product", data, {
+    try {
+      const postProduct = await api.post("/product", data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      })
-      .catch((err) => {
-        toast.warning("Falha ao cadastrar produto!");
-
-        console.log(err);
       });
-
-    toast.success("Produto registrado.");
-    router.push("/dashboard");
+      toast.success("Produto registrado.");
+      setPreviewImage("");
+    } catch (err: any) {
+      console.log(err.response.data.message);
+      toast.warning("Falha ao cadastrar produto!");
+    }
   };
 
   const handleFile = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -64,7 +66,7 @@ export function Form({ categories }: DataProps) {
       const image = e.target.files[0];
 
       if (image.type !== "image/jpeg" && image.type !== "image/png") {
-        toast.warning("Formato não permitido");
+        toast.warning("Formato não permitido.");
         return;
       }
 
@@ -75,7 +77,7 @@ export function Form({ categories }: DataProps) {
 
   return (
     <main className={styles.container}>
-      <h1>Formulario</h1>
+      <h1>Cadastrar produto</h1>
 
       <form className={styles.form} action={handleRegisterProduct}>
         <label className={styles.labelImage}>
@@ -103,6 +105,7 @@ export function Form({ categories }: DataProps) {
         </label>
 
         <select name="category">
+          <option value="default">Categorias...</option>
           {categories.map((eachCategory, index) => (
             <option key={eachCategory.id} value={index}>
               {eachCategory.name}

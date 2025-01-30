@@ -1,10 +1,11 @@
 .headerContainer {
-  height: 5rem;
+  // height: auto;
+  margin-bottom: 30px;
 }
 
 .headerContent {
   max-width: 1280px;
-  height: 5rem;
+  // height: 5rem;
   margin: 10 auto;
   padding: 0px 16px;
   display: flex;
@@ -15,16 +16,25 @@
   nav{
     display: flex;
     align-items: center;
-    gap: 14px;
+    
+    .navList {
+      list-style: none;
+      display: flex;
+      gap: 14px;
+      position: relative;
+    }
   }
 
-  a{
+  li {
     color: var(--white);
     text-decoration: none;
     transition: color .3s;
 
-    &:hover {
+    &:hover,
+    &:hover .sublist {
         color: var(--red-900);
+        display: flex;
+        cursor: pointer;
     }
   }
 
@@ -37,6 +47,24 @@
     &:hover{
         transform: scale(1.2);
     }
+  }
+}
+
+.sublist {
+  display: none;
+  z-index: 50;
+  background-color: var(--dark-900);
+  padding: 15px;
+  flex-direction: column;
+  gap: 20px;
+  position: absolute;
+  top: 100%;
+  list-style: none;
+  border: 1px solid var(--white);
+  border-radius: 8px;
+
+  &:hover {
+    display: flex;
   }
 }
 

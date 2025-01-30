@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { toast } from "sonner";
 import styles from "../../page.module.scss";
+import { Button } from "@/app/dashboard/components/button";
 
 export default function SignUpForm() {
   const router = useRouter();
@@ -55,9 +56,7 @@ export default function SignUpForm() {
         placeholder="***************"
         className={styles.input}
       />
-      <button type="submit" className={styles.button}>
-        Cadastrar
-      </button>
+      <Button name="Cadastrar" />
     </form>
   );
 }

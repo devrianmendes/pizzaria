@@ -6,7 +6,8 @@
   justify-content: space-between;
   flex-direction: column;
 
-  h1 {
+  h1,
+  span {
     color: var(--white);
   }
 }
@@ -16,7 +17,6 @@
   gap: 14px;
   margin-top: 24px;
   margin-bottom: 16px;
-
   button {
     background: transparent;
     border: 0px;
@@ -38,7 +38,7 @@
   border-radius: 8px;
   color: var(--white);
   transition: filter 0.5s;
-  margin-bottom: .8rem;
+  margin-bottom: 0.8rem;
 
   &:hover {
     filter: brightness(1.2);
@@ -53,6 +53,6 @@
   margin-right: 16px;
 }
 
-.emptyitem{
+.emptyitem {
   color: var(--gray-100);
 }

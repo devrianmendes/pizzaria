@@ -1,13 +1,12 @@
 "use client";
 
-// import { api } from "@/services/app";
-// import { cookies } from "next/headers";
 import { useRouter } from "next/navigation";
 import styles from "../page.module.scss";
-import { toast, Toaster } from "sonner";
+import { toast } from "sonner";
 import AuthUser from "@/actions/authUser";
 import { useActionState, useEffect } from "react";
-// import { useActionState } from "react-dom";
+import { useFormStatus } from "react-dom";
+import { Button } from "../dashboard/components/button";
 
 export default function SignInForm() {
   const router = useRouter();
@@ -19,7 +18,6 @@ export default function SignInForm() {
 
   useEffect(() => {
     if (state.status && state.data.name) {
-      console.log(state, "status true");
       toast.success(`Bem-vindo, ${state.data.name}.`);
       router.push("/dashboard");
     } else {
@@ -46,9 +44,8 @@ export default function SignInForm() {
         placeholder="***************"
         className={styles.input}
       />
-      <button type="submit" className={styles.button}>
-        Acessar
-      </button>
+
+      <Button name="Entrar" />
     </form>
   );
 }

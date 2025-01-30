@@ -1,5 +1,5 @@
 import { getCookieServer } from "@/lib/cookieServer";
-import { Form } from "./components/form";
+import { Form } from "./create-product/components/createProductForm";
 import { api } from "@/services/app";
 
 export default async function Product() {
@@ -10,10 +10,10 @@ export default async function Product() {
       Authorization: `Bearer ${token}`,
     },
   });
-  
+
   return (
     <main>
-      <Form categories={response.data}/>
+      <Form categories={response.data} />
     </main>
   );
 }

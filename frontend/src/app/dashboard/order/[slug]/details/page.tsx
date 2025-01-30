@@ -10,6 +10,9 @@ import { OrderContext } from "../../../../../../providers/order";
 import styles from "./styles.module.scss";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import loadCategoryList from "@/actions/loadCategoryList";
+import loadProducts from "@/actions/loadProductList";
+import loadProductList from "@/actions/loadProductList";
 
 type CategoryType = {
   id: string;
@@ -79,17 +82,6 @@ const Page = ({ params, searchParams }: ParamsType) => {
       });
 
     if (response) setOrderDetails(response.data);
-  };
-
-  const LoadBanner = (id: string, name: string) => {
-    return (
-      <Image
-        src={`http://localhost:3000/tmp/${id}-${name}.jpg`}
-        alt="Imagem do item pedido."
-        width={50}
-        height={50}
-      />
-    );
   };
 
   const handleAddItem = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -176,23 +168,15 @@ const Page = ({ params, searchParams }: ParamsType) => {
 
   // Load category list
   useEffect(() => {
-    const getCategoryList = async () => {
-      const response = await api
-        .get("/category", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .catch((err: any) => {
-          toast.error(err.response.data.message);
-          console.log(err.response.data.message);
-          return;
-        });
-
-      if (!response) return;
-      setCategoryList(response.data);
+    const loadCategory = async () => {
+      const response = await loadCategoryList();
+      if (!response) {
+        toast.error("Erro ao carregar categorias.");
+        return;
+      }
+      setCategoryList(response);
     };
-    getCategoryList();
+    loadCategory();
   }, [token]);
 
   //Load product list
@@ -200,25 +184,11 @@ const Page = ({ params, searchParams }: ParamsType) => {
     const categoryId = selectedCategory;
     if (!categoryId) return;
 
-    const getProductList = async () => {
-      const response = await api
-        .get(`/category/${categoryId}/products`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          params: { categoryId },
-        })
-        .catch((err) => {
-          console.log(err);
-          return;
-        });
-
-      if (!response) return;
-
-      setProductList(response.data);
+    const loadProduct = async () => {
+      const response = await loadProductList(categoryId);
+      setProductList(response);
     };
-
-    getProductList();
+    loadProduct();
   }, [selectedCategory, token]);
 
   return (
@@ -227,7 +197,8 @@ const Page = ({ params, searchParams }: ParamsType) => {
         <form>
           <header className={styles.formHeader}>
             <h3>
-              Mesa <span>{table}</span> - Total: <span>R${orderTotal.toFixed(2)}</span>
+              Mesa <span>{table}</span> - Total:{" "}
+              <span>R${orderTotal.toFixed(2)}</span>
             </h3>
             <TrashIcon
               className={styles.trash}
@@ -311,8 +282,10 @@ const Page = ({ params, searchParams }: ParamsType) => {
                       {eachItem.product.description}
                     </p>
                     <p>
-                      (Un: R${(+eachItem.product.price.replace(",", ".")).toFixed(2)} /{" "}
-                      {eachItem.amount}x: R$
+                      (Un: R$
+                      {(+eachItem.product.price.replace(",", ".")).toFixed(
+                        2
+                      )} / {eachItem.amount}x: R$
                       {(
                         +eachItem.product.price.replace(",", ".") *
                         eachItem.amount

@@ -57,25 +57,6 @@ export default function Home() {
 
       <section className={styles.login}>
         <SignInForm />
-        {/* <form action={handleLogin}>
-          <input
-            type="email"
-            required
-            name="email"
-            placeholder="Digite seu email..."
-            className={styles.input}
-          />
-          <input
-            type="password"
-            required
-            name="password"
-            placeholder="***************"
-            className={styles.input}
-          />
-          <button type="submit" className={styles.button}>
-            Acessar
-          </button>
-        </form> */}
         <Link href="/signup" className={styles.text}>
           Não possui uma conta? Cadastre-se
         </Link>

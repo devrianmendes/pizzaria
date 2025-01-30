@@ -38,7 +38,7 @@ const page = () => {
     } finally {
       if (orderId) {
         redirect(
-          `/dashboard/newOrder/${tableNumber}/details?orderId=${orderId}`
+          `/dashboard/order/${tableNumber}/details?orderId=${orderId}`
         );
       }
     }
