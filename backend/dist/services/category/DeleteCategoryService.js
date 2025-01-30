@@ -12,48 +12,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DetailOrderService = void 0;
+exports.DeleteCategoryService = void 0;
 const prisma_1 = __importDefault(require("../../prisma"));
-class DetailOrderService {
+class DeleteCategoryService {
     execute(_a) {
-        return __awaiter(this, arguments, void 0, function* ({ orderId }) {
+        return __awaiter(this, arguments, void 0, function* ({ id }) {
             try {
-                const order = yield prisma_1.default.item.findMany({
+                const category = yield prisma_1.default.category.delete({
                     where: {
-                        orderId: orderId,
-                    },
-                    select: {
-                        id: true,
-                        amount: true,
-                        product: {
-                            select: {
-                                id: true,
-                                name: true,
-                                description: true,
-                                price: true,
-                                banner: true,
-                            },
-                        },
-                        order: {
-                            select: {
-                                id: true,
-                                name: true,
-                                table: true,
-                            },
-                        },
+                        id: id,
                     },
                 });
-                return order;
+                console.log(category);
+                return category;
             }
             catch (err) {
                 if (err instanceof Error) {
-                    throw new Error("Erro ao carregar pedido. " + err.message);
+                    if (err.message.includes("Foreign key constraint violated")) {
+                        throw new Error("Existem produtos nessa categoria.");
+                    }
+                    throw new Error("Erro na conexão com o banco de dados. " + err.message);
                 }
                 else {
-                    throw new Error("Erro inesperado.");
+                    throw new Error("Erro genérico.");
                 }
             }
         });
     }
 }
-exports.DetailOrderService = DetailOrderService;
+exports.DeleteCategoryService = DeleteCategoryService;

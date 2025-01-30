@@ -9,21 +9,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ListProductByCategoryController = void 0;
-const ListProductByCategoryService_1 = require("../../services/product/ListProductByCategoryService");
-class ListProductByCategoryController {
+exports.DeleteCategoryController = void 0;
+const DeleteCategoryService_1 = require("../../services/category/DeleteCategoryService");
+class DeleteCategoryController {
     handle(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const categoryId = req.query.categoryId;
+            const { id } = req.query;
             try {
-                if (!categoryId) {
-                    return res.status(400).json({
-                        message: "Erro ao listar produtos. Id da categoria faltante.",
-                    });
-                }
-                const listProductByCategory = new ListProductByCategoryService_1.ListProductByCategoryService();
-                const list = yield listProductByCategory.execute({ categoryId });
-                return res.status(200).json(list);
+                const deleteCategoryService = new DeleteCategoryService_1.DeleteCategoryService();
+                const category = yield deleteCategoryService.execute({ id });
+                return res.status(201).json(category);
             }
             catch (err) {
                 if (err instanceof Error) {
@@ -36,4 +31,4 @@ class ListProductByCategoryController {
         });
     }
 }
-exports.ListProductByCategoryController = ListProductByCategoryController;
+exports.DeleteCategoryController = DeleteCategoryController;

@@ -12,7 +12,7 @@ const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use((0, cors_1.default)());
 app.use(router_1.router);
-app.use('/files', express_1.default.static(path_1.default.resolve(__dirname, '..', 'tmp')));
+app.use('/tmp', express_1.default.static(path_1.default.resolve(__dirname, '..', 'tmp')));
 app.use((err, req, res, next) => {
     if (err instanceof Error) {
         return res.status(400).json({

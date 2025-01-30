@@ -12,8 +12,10 @@ const AuthUserController_1 = require("./controllers/user/AuthUserController");
 const DetailUserController_1 = require("./controllers/user/DetailUserController");
 const CreateCategoryController_1 = require("./controllers/category/CreateCategoryController");
 const ListCategoryController_1 = require("./controllers/category/ListCategoryController");
+const DeleteCategoryController_1 = require("./controllers/category/DeleteCategoryController");
 const CreateProductController_1 = require("./controllers/product/CreateProductController");
 const ListProductByCategoryController_1 = require("./controllers/product/ListProductByCategoryController");
+const DeleteProductController_1 = require("./controllers/product/DeleteProductController");
 const CreateItemController_1 = require("./controllers/item/CreateItemController");
 const DeleteItemController_1 = require("./controllers/item/DeleteItemController");
 const CreateOrderController_1 = require("./controllers/order/CreateOrderController");
@@ -33,8 +35,11 @@ router.get("/user/me", isAuthenticated_1.isAuthenticated, new DetailUserControll
 //Category routes
 router.post("/category", isAuthenticated_1.isAuthenticated, new CreateCategoryController_1.CreateCategoryController().handle);
 router.get("/category", isAuthenticated_1.isAuthenticated, new ListCategoryController_1.ListCategoryController().handle);
-//Product routes
+router.delete("/category", isAuthenticated_1.isAuthenticated, new DeleteCategoryController_1.DeleteCategoryController().handle);
+// Product routes
 router.post("/product", isAuthenticated_1.isAuthenticated, upload.single("file"), new CreateProductController_1.CreateProductController().handle);
+router.delete("/product", isAuthenticated_1.isAuthenticated, new DeleteProductController_1.DeleteProductController().handle // Controlador final
+);
 router.get("/category/:id/products", isAuthenticated_1.isAuthenticated, new ListProductByCategoryController_1.ListProductByCategoryController().handle);
 //Order routes
 router.post("/order", isAuthenticated_1.isAuthenticated, new CreateOrderController_1.CreateOrderController().handle);

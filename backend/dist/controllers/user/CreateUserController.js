@@ -28,7 +28,6 @@ class CreateUserController {
             }
             catch (err) {
                 if (err instanceof Error) {
-                    console.log(err);
                     return res.status(500).json({ message: err.message });
                 }
                 else {
