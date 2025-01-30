@@ -5,7 +5,6 @@ import styles from "../page.module.scss";
 import { toast } from "sonner";
 import AuthUser from "@/actions/authUser";
 import { useActionState, useEffect } from "react";
-import { useFormStatus } from "react-dom";
 import { Button } from "../dashboard/components/button";
 
 export default function SignInForm() {
@@ -26,7 +25,7 @@ export default function SignInForm() {
       }
       toast.error(state.data.message);
     }
-  }, [state]);
+  }, [state, router]);
 
   return (
     <form action={action}>

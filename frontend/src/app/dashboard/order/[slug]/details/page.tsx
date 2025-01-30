@@ -9,9 +9,7 @@ import { toast } from "sonner";
 import { OrderContext } from "../../../../../../providers/order";
 import styles from "./styles.module.scss";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import loadCategoryList from "@/actions/loadCategoryList";
-import loadProducts from "@/actions/loadProductList";
 import loadProductList from "@/actions/loadProductList";
 
 type CategoryType = {

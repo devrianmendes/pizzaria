@@ -2,9 +2,8 @@
 
 import { api } from "@/services/app";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
-export default async function AuthUser(state: {}, formData: FormData) {
+export default async function AuthUser(state: unknown, formData: FormData) {
   const email = formData.get("email");
   const password = formData.get("password");
 

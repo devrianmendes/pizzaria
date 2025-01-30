@@ -2,7 +2,7 @@
 
 import { UploadCloud } from "lucide-react";
 import styles from "./styles.module.scss";
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import Image from "next/image";
 import { Button } from "@/app/dashboard/components/button";
 import { api } from "@/services/app";
@@ -53,6 +53,7 @@ export function Form({ categories }: DataProps) {
           Authorization: `Bearer ${token}`,
         },
       });
+      console.log(postProduct)
       toast.success("Produto registrado.");
       setPreviewImage("");
     } catch (err: any) {
