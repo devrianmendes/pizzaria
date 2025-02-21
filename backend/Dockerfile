@@ -3,10 +3,12 @@ FROM node:22-alpine
 WORKDIR /usr/app/pizzaria
 
 COPY package*.json ./
-RUN npm install --production
+RUN npm install
 
 COPY . .
 
+RUN npx prisma generate
+
 EXPOSE 3333
 
-CMD ["npm", "start"]
+CMD ["npm", "run", "up"]
