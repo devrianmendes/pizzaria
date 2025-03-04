@@ -7,7 +7,7 @@
     "build": "tsc",
     "dev": "ts-node-dev src/server.ts",
     "start": "ts-node-dev src/server.ts",
-    "up": "node dist/server.js"
+    "up": "node build/server.js"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
